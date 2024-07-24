@@ -1,0 +1,19 @@
+server:
+  port : 9061
+  servlet:
+    context-path: /core
+  forward-headers-strategy: framework
+
+spring:
+  datasource:
+    username: ${POSTGRES_USERNAME:admin}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/lastfarewells}
+    password: ${POSTGRES_PASSWORD:admin}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: validate
+        integration:
+          envers:
+            enabled: true
