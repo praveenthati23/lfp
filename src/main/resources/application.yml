@@ -13,7 +13,16 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        ddl-auto: validate
+        ddl-auto: auto
         integration:
           envers:
             enabled: true
+            
+storj:
+ bucketName : <bucketName>
+ accessKeyId : <accessKeyId>
+ secretKey : <secretekey>
+ region : <region>
+ endpointUrl : https://gateway.storjshare.io
+ upload.duration : 1
+ download.duration : 2
