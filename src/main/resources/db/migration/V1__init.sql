@@ -44,5 +44,11 @@ CREATE TABLE IF NOT EXISTS Users (
     contact_number VARCHAR ( 25 ),
     secondary_email VARCHAR ( 255 ),
     created_on TIMESTAMP NOT NULL,
-	updated_on TIMESTAMP
+	updated_on TIMESTAMP,
+	email VARCHAR ( 255 )  UNIQUE NOT NULL,
+	email_verified BOOLEAN NOT NULL,
+    status BOOLEAN,
+    is_trustor BOOLEAN,
+    last_login TIMESTAMP,
+    role_id INT NOT NULL
 );

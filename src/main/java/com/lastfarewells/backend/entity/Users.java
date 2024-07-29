@@ -92,4 +92,17 @@ public class Users {
     @Column(name = "updated_on")
     private Instant    updatedOn;
 
+    @Column(name = "email")
+    private String  email;
+    @Column(name = "email_verified")
+    private Boolean emailVerified;
+    @Column(name = "status")
+    private Boolean status;
+    @Column(name = "is_trustor")
+    private Boolean isTrustor;
+    @Column(name = "last_login")
+    private Instant lastLogin;
+    @Column(name = "role_id")
+    private Integer roleId;
+
 }
