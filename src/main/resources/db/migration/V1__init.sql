@@ -10,3 +10,39 @@ CREATE TABLE IF NOT EXISTS presigned_url_tbl
 	created_at	 	timestamp without time zone,
 	modified_at 		timestamp without time zone
 );
+
+
+CREATE TABLE IF NOT EXISTS Users (
+	id serial PRIMARY KEY,
+	google_open_id VARCHAR ( 255 )  UNIQUE,
+	iam_id VARCHAR ( 255 )  UNIQUE,
+	first_name VARCHAR ( 255 ),
+    last_name VARCHAR ( 255 ),
+	birth_date DATE,
+	gender VARCHAR ( 50 ),
+	photo_url TEXT,
+    facebook_url TEXT,
+    x_url TEXT,
+    insta_url TEXT,
+    tiktok_url TEXT,
+    country_id INT,
+    city VARCHAR ( 100 ),
+    state VARCHAR ( 100 ),
+    zip VARCHAR ( 25 ),
+    birth_country_id INT,
+    birth_city VARCHAR ( 100 ),
+    birth_state VARCHAR ( 100 ),
+    birth_zip VARCHAR ( 25 ),
+    deceased BOOLEAN,
+    death_date DATE,
+    is_first_letter_created BOOLEAN,
+    is_first_video_created BOOLEAN,
+    is_first_audio_created BOOLEAN,
+    has_written BOOLEAN,
+    birth_address TEXT,
+    address TEXT,
+    contact_number VARCHAR ( 25 ),
+    secondary_email VARCHAR ( 255 ),
+    created_on TIMESTAMP NOT NULL,
+	updated_on TIMESTAMP
+);
