@@ -4,6 +4,7 @@ import com.lastfarewells.backend.dto.LoginDto;
 import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
+import com.lastfarewells.backend.dto.VerifyEmailDto;
 import com.lastfarewells.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -48,5 +49,11 @@ public class UserController {
     public String resetUserPassword(@RequestBody @Valid PasswordResetDto passwordResetDto) {
         userService.resetUserPassword(passwordResetDto);
         return "Password successfully reset!";
+    }
+
+    @PutMapping("/verify-email")
+    public String verifyEmail(@RequestBody @Valid VerifyEmailDto verifyEmailDto) {
+        userService.verifyEmail(verifyEmailDto);
+        return "Thank you for signing up with Last Farewells, your account has been verified.";
     }
 }

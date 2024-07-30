@@ -4,6 +4,7 @@ import com.lastfarewells.backend.dto.LoginDto;
 import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
+import com.lastfarewells.backend.dto.VerifyEmailDto;
 import com.lastfarewells.backend.entity.Users;
 import com.lastfarewells.backend.exception.UserAuthenticationException;
 import com.lastfarewells.backend.exception.UserException;
@@ -57,6 +58,11 @@ public class UserServiceImpl implements UserService {
                 .isTrustor(false).build();
             usersRepository.save(users);
 
+            String token = JWTUtils.generateVerificationToken(iamId);
+            //TODO remove println as soon as mail sender is done
+            System.out.println("**** : " + token);
+            // send verification email
+            //https://lastfarewells.vercel.app/signup/token
         } catch (Exception e) {
             // Compensation action: delete the user from auth service if profile registration fails
             //userAuthRepository.deleteByEmail(signupDto.getEmail());
@@ -121,6 +127,19 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             log.error("Password Reset failed : {}", e.getMessage());
             throw new UserException("Password Reset failed");
+        }
+    }
+
+    @Override
+    public void verifyEmail(VerifyEmailDto verifyEmailDto) {
+        String subject = JWTUtils.getEmailFromToken(verifyEmailDto.getToken());
+        Users subjectUser = usersRepository.findByIamId(subject)
+            .orElseThrow(() -> new UserException("Invalid token for User"));
+        try {
+            keycloakService.verifyEmail(subjectUser.getEmail());
+        } catch (Exception e) {
+            log.error("Email Verification failed : {}", e.getMessage());
+            throw new UserException("Email Verification failed");
         }
     }
 

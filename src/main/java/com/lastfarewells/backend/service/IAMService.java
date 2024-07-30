@@ -15,4 +15,7 @@ public interface IAMService {
     void logout(String token);
 
     void updatePassword(String userId, String password);
+
+    void verifyEmail(String email);
+
 }

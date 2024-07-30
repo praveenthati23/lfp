@@ -107,6 +107,7 @@ public class KeycloakServiceImpl implements IAMService {
             .resetPassword(credentialRepresentation);
     }
 
+    @Override
     public void verifyEmail(String email) {
         UsersResource usersResource = kcProvider.getInstance().realm(realm).users();
         List<UserRepresentation> users = usersResource.search(email, 0, 1);

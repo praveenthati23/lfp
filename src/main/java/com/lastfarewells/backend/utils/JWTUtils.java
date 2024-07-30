@@ -7,10 +7,17 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.text.ParseException;
 import java.util.Date;
+import org.springframework.stereotype.Component;
 
+@Component
 public class JWTUtils {
 
-    private static final String secretKey = "IrM8Cliyu7LLSo8rDIR4rMtnioM/8BEhftDNwx+zCeg49eBpGoTJELmkmNbRktag7YPQT9he21ti/1WWd55rPw==";
+
+    private static String secretKey;
+
+    public static void setSecretKey(String key) {
+        secretKey = key;
+    }
 
     private JWTUtils() {
     }

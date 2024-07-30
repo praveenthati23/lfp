@@ -36,3 +36,6 @@ keycloak:
   use-resource-role-mappings: true
   ssl-required: external
   resource: lastfarewells-admin
+
+jwt:
+  secret-key: IrM8Cliyu7LLSo8rDIR4rMtnioM/8BEhftDNwx+zCeg49eBpGoTJELmkmNbRktag7YPQT9he21ti/1WWd55rPw==
