@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.Date;
@@ -14,6 +16,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "Users")
@@ -51,22 +55,6 @@ public class Users {
     private String     instaUrl;
     @Column(name = "tiktok_url")
     private String     tiktokUrl;
-    @Column(name = "country_id")
-    private Long       countryId;
-    @Column(name = "city")
-    private String     city;
-    @Column(name = "state")
-    private String     state;
-    @Column(name = "zip")
-    private String     zip;
-    @Column(name = "birth_country_id")
-    private Long       birthCountryId;
-    @Column(name = "birth_city")
-    private String     birthCity;
-    @Column(name = "birth_state")
-    private String     birthState;
-    @Column(name = "birth_zip")
-    private String     birthZip;
     @Column(name = "deceased")
     private Boolean    deceased;
     @Column(name = "death_date")
@@ -79,18 +67,25 @@ public class Users {
     private Boolean    isFirstAudioCreated;
     @Column(name = "has_written")
     private Boolean    hasWritten;
-    @Column(name = "birth_address")
-    private String     birthAddress;
-    @Column(name = "address")
-    private String     address;
+
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Address address;
+
+    @ManyToOne
+    @JoinColumn(name = "birth_address_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Address birthAddress;
+
     @Column(name = "contact_number")
-    private String     contactNumber;
+    private String  contactNumber;
     @Column(name = "secondary_email")
-    private String     secondaryEmail;
+    private String  secondaryEmail;
     @Column(name = "created_on")
-    private Instant    createdOn;
+    private Instant createdOn;
     @Column(name = "updated_on")
-    private Instant    updatedOn;
+    private Instant updatedOn;
 
     @Column(name = "email")
     private String  email;

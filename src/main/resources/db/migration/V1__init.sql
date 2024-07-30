@@ -11,6 +11,14 @@ CREATE TABLE IF NOT EXISTS presigned_url_tbl
 	modified_at 		timestamp without time zone
 );
 
+CREATE TABLE IF NOT EXISTS addresses (
+	id serial PRIMARY KEY,
+	address TEXT,
+	country_id INT,
+	city VARCHAR ( 100 ),
+    state VARCHAR ( 100 ),
+    zip VARCHAR ( 25 )
+);
 
 CREATE TABLE IF NOT EXISTS Users (
 	id serial PRIMARY KEY,
@@ -25,22 +33,14 @@ CREATE TABLE IF NOT EXISTS Users (
     x_url TEXT,
     insta_url TEXT,
     tiktok_url TEXT,
-    country_id INT,
-    city VARCHAR ( 100 ),
-    state VARCHAR ( 100 ),
-    zip VARCHAR ( 25 ),
-    birth_country_id INT,
-    birth_city VARCHAR ( 100 ),
-    birth_state VARCHAR ( 100 ),
-    birth_zip VARCHAR ( 25 ),
     deceased BOOLEAN,
     death_date DATE,
     is_first_letter_created BOOLEAN,
     is_first_video_created BOOLEAN,
     is_first_audio_created BOOLEAN,
     has_written BOOLEAN,
-    birth_address TEXT,
-    address TEXT,
+    address_id BIGINT,
+    birth_address_id BIGINT,
     contact_number VARCHAR ( 25 ),
     secondary_email VARCHAR ( 255 ),
     created_on TIMESTAMP NOT NULL,
@@ -50,5 +50,7 @@ CREATE TABLE IF NOT EXISTS Users (
     status BOOLEAN,
     is_trustor BOOLEAN,
     last_login TIMESTAMP,
-    role_id INT NOT NULL
+    role_id INT NOT NULL,
+    FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE CASCADE,
+    FOREIGN KEY (birth_address_id) REFERENCES addresses(id) ON DELETE CASCADE
 );
