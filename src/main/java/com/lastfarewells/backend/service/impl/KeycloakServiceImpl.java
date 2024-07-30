@@ -7,6 +7,7 @@ import com.lastfarewells.backend.exception.IAMException;
 import com.lastfarewells.backend.service.IAMService;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.Response;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -70,12 +72,12 @@ public class KeycloakServiceImpl implements IAMService {
      */
     @Override
     public AccessTokenResponse login(LoginDto loginDTO) {
-        Keycloak keycloak = kcProvider.newKeycloakBuilderWithPasswordCredentials(loginDTO.username(), loginDTO.password()).build();
+        Keycloak keycloak = kcProvider.newKeycloakBuilderWithPasswordCredentials(loginDTO.getEmail(), loginDTO.getPassword()).build();
         try {
             return keycloak.tokenManager().getAccessToken();
         } catch (BadRequestException | NotAuthorizedException ex) {
-            log.error("User login failed, invalid account", ex);
-            throw new IAMException("Keycloak Login failed!!");
+            log.error("Keycloak Login failed!!, User login failed, invalid account", ex);
+            throw new IAMException("Invalid credentials");
         }
     }
 
@@ -95,6 +97,25 @@ public class KeycloakServiceImpl implements IAMService {
     @Override
     public void logout(String token) {
         kcProvider.getInstance().tokenManager().invalidate(token);
+    }
+
+    @Override
+    public void updatePassword(String userId, String password) {
+        UsersResource usersResource = kcProvider.getInstance().realm(realm).users();
+        CredentialRepresentation credentialRepresentation = createPasswordCredentials(password);
+        usersResource.get(userId)
+            .resetPassword(credentialRepresentation);
+    }
+
+    public void verifyEmail(String email) {
+        UsersResource usersResource = kcProvider.getInstance().realm(realm).users();
+        List<UserRepresentation> users = usersResource.search(email, 0, 1);
+        if (!users.isEmpty()) {
+            UserResource userResource = usersResource.get(users.get(0).getId());
+            UserRepresentation user = userResource.toRepresentation();
+            user.setEmailVerified(true);
+            userResource.update(user);
+        }
     }
 
     private static CredentialRepresentation createPasswordCredentials(String password) {

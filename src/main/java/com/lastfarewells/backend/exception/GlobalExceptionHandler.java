@@ -29,7 +29,21 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
-    @ExceptionHandler(UserException.class)
+    @ExceptionHandler({UserException.class})
+    public ResponseEntity<ErrorResponse> handleCoreException(
+        Exception e
+    ) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>(
+            new ErrorResponse(
+                status,
+                e.getMessage()
+            ),
+            status
+        );
+    }
+
+    @ExceptionHandler({IAMException.class, UserAuthenticationException.class})
     public ResponseEntity<ErrorResponse> handleUserAuthenticationException(
         Exception e
     ) {

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDto {
+public class PasswordResetDto {
 
     @NotNull(message = "email cannot be null")
     @NotBlank(message = "email is mandatory")
@@ -22,5 +22,9 @@ public class LoginDto {
     @NotNull(message = "password cannot be null")
     @NotBlank(message = "password is mandatory")
     private String password;
+
+    @NotNull(message = "password cannot be null")
+    @NotBlank(message = "password is mandatory")
+    private String token;
 
 }
