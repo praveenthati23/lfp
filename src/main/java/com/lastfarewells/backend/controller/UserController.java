@@ -60,7 +60,7 @@ public class UserController {
 
     @GetMapping("/user/me")
     public Users getUser() {
-        return Users.builder().id(1L).build();
+        return userService.getUser();
     }
 
 }

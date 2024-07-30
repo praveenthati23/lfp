@@ -5,6 +5,7 @@ import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
 import com.lastfarewells.backend.dto.VerifyEmailDto;
+import com.lastfarewells.backend.entity.Users;
 
 public interface UserService {
 
@@ -19,4 +20,5 @@ public interface UserService {
 
     void verifyEmail(VerifyEmailDto verifyEmailDto);
 
+    Users getUser();
 }

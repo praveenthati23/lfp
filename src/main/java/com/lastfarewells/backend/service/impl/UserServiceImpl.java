@@ -143,4 +143,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Users getUser() {
+        String iamId = JWTUtils.getUserIdFromToken();
+        return usersRepository.findByIamId(iamId)
+            .orElseThrow(() -> new UserException("User Not Found"));
+    }
+
 }
