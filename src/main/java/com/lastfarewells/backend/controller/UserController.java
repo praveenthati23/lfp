@@ -5,6 +5,7 @@ import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
 import com.lastfarewells.backend.dto.VerifyEmailDto;
+import com.lastfarewells.backend.entity.Users;
 import com.lastfarewells.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -39,21 +40,27 @@ public class UserController {
         return userService.authenticateUser(loginDto);
     }
 
-    @GetMapping("/forgot-password")
+    @GetMapping("/auth/forgot-password")
     public String forgotPassword(@RequestParam("email") String email) {
         userService.forgotPassword(email);
         return "Successfully sent reset-password link!!";
     }
 
-    @PutMapping("/reset-password")
+    @PutMapping("/auth/reset-password")
     public String resetUserPassword(@RequestBody @Valid PasswordResetDto passwordResetDto) {
         userService.resetUserPassword(passwordResetDto);
         return "Password successfully reset!";
     }
 
-    @PutMapping("/verify-email")
+    @PutMapping("/auth/verify-email")
     public String verifyEmail(@RequestBody @Valid VerifyEmailDto verifyEmailDto) {
         userService.verifyEmail(verifyEmailDto);
         return "Thank you for signing up with Last Farewells, your account has been verified.";
     }
+
+    @GetMapping("/user/me")
+    public Users getUser() {
+        return Users.builder().id(1L).build();
+    }
+
 }
