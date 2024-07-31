@@ -16,6 +16,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -70,12 +72,14 @@ public class Users {
 
     @ManyToOne
     @JoinColumn(name = "address_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Cascade(CascadeType.ALL)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private Address address;
 
     @ManyToOne
     @JoinColumn(name = "birth_address_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Cascade(CascadeType.ALL)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     private Address birthAddress;
 
     @Column(name = "contact_number")

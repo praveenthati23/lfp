@@ -3,6 +3,7 @@ package com.lastfarewells.backend.service.impl;
 import com.lastfarewells.backend.dto.LoginDto;
 import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
+import com.lastfarewells.backend.dto.UpdateUserDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
 import com.lastfarewells.backend.dto.VerifyEmailDto;
 import com.lastfarewells.backend.entity.Users;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.AccessTokenResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     private final UsersRepository usersRepository;
     private final IAMService      keycloakService;
+    private final ModelMapper     modelMapper;
 
    /* @Override
     public Users registerUser(RegisterUserDto registerUserDto) {
@@ -148,6 +151,16 @@ public class UserServiceImpl implements UserService {
         String iamId = JWTUtils.getUserIdFromToken();
         return usersRepository.findByIamId(iamId)
             .orElseThrow(() -> new UserException("User Not Found"));
+    }
+
+    @Override
+    public Users updateUser(Long id, UpdateUserDto updateUserDto) {
+        Users user = usersRepository.findById(id)
+            .orElseThrow(() -> new UserException("User not found"));
+
+        modelMapper.map(updateUserDto, user);
+        user.setUpdatedOn(Instant.now());
+        return usersRepository.save(user);
     }
 
 }

@@ -3,6 +3,7 @@ package com.lastfarewells.backend.controller;
 import com.lastfarewells.backend.dto.LoginDto;
 import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
+import com.lastfarewells.backend.dto.UpdateUserDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
 import com.lastfarewells.backend.dto.VerifyEmailDto;
 import com.lastfarewells.backend.entity.Users;
@@ -10,6 +11,7 @@ import com.lastfarewells.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,6 +63,11 @@ public class UserController {
     @GetMapping("/user/me")
     public Users getUser() {
         return userService.getUser();
+    }
+
+    @PutMapping("/{id}")
+    public Users updateUser(@PathVariable Long id, @RequestBody UpdateUserDto updateUserDto) {
+        return userService.updateUser(id, updateUserDto);
     }
 
 }
