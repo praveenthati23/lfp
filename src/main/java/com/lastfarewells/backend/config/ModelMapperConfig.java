@@ -2,6 +2,7 @@ package com.lastfarewells.backend.config;
 
 import com.lastfarewells.backend.dto.AddressDto;
 import com.lastfarewells.backend.dto.UpdateUserDto;
+import com.lastfarewells.backend.dto.UserDetailsDto;
 import com.lastfarewells.backend.entity.Address;
 import com.lastfarewells.backend.entity.Users;
 import org.modelmapper.Condition;
@@ -36,15 +37,6 @@ public class ModelMapperConfig {
                 when(notNull).map().setDeathDate(source.getDeathDate());
                 when(notNull).map().setSecondaryEmail(source.getSecondaryEmail());
                 when(notNull).map().setContactNumber(source.getContactNumber());
-                //when(notNull).map(src -> source.getAddress(), (dest, v) -> dest.setAddress(modelMapper.map(v, Address.class)));
-                /*if (source.getAddress() != null) {
-                    when(notNull).map().setAddress(modelMapper.map(source.getAddress(), Address.class));
-                }
-                if (source.getBirthAddress() != null) {
-                    when(notNull).map().setBirthAddress(modelMapper.map(source.getBirthAddress(), Address.class));
-                }*/
-                // when(notNull).map().setAddress(source.getAddress());
-                //when(notNull).map().setContactNumber(source.getContactNumber());
                 when(notNull).map().getAddress().setCity(source.getAddress().getCity());
                 when(notNull).map().getAddress().setAddress(source.getAddress().getAddress());
                 when(notNull).map().getAddress().setCountryId(source.getAddress().getCountryId());
@@ -69,6 +61,14 @@ public class ModelMapperConfig {
                 when(notNull).map().setCountryId(source.getCountryId());
                 when(notNull).map().setZip(source.getZip());
                 skip().setId(null);
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<Users, UserDetailsDto>() {
+            @Override
+            protected void configure() {
+                skip().setMessagesCount(null);
+                skip().setSubscription(null);
             }
         });
 

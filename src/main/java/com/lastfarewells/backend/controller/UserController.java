@@ -5,6 +5,7 @@ import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
 import com.lastfarewells.backend.dto.UpdateUserDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
+import com.lastfarewells.backend.dto.UserDetailsDto;
 import com.lastfarewells.backend.dto.VerifyEmailDto;
 import com.lastfarewells.backend.entity.Users;
 import com.lastfarewells.backend.service.UserService;
@@ -61,7 +62,7 @@ public class UserController {
     }
 
     @GetMapping("/user/me")
-    public Users getUser() {
+    public UserDetailsDto getUser() {
         return userService.getUser();
     }
 

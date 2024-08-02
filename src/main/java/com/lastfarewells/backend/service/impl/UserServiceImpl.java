@@ -1,10 +1,13 @@
 package com.lastfarewells.backend.service.impl;
 
 import com.lastfarewells.backend.dto.LoginDto;
+import com.lastfarewells.backend.dto.MessageCountDto;
 import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
+import com.lastfarewells.backend.dto.SubscriptionDto;
 import com.lastfarewells.backend.dto.UpdateUserDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
+import com.lastfarewells.backend.dto.UserDetailsDto;
 import com.lastfarewells.backend.dto.VerifyEmailDto;
 import com.lastfarewells.backend.entity.Users;
 import com.lastfarewells.backend.exception.UserAuthenticationException;
@@ -58,7 +61,8 @@ public class UserServiceImpl implements UserService {
             Users users = Users.builder().firstName(signupDto.getFirstName())
                 .lastName(signupDto.getLastName()).iamId(iamId).birthDate(signupDto.getBirthDate())
                 .createdOn(Instant.now()).email(signupDto.getEmail()).roleId(1).emailVerified(false)
-                .isTrustor(false).build();
+                .isTrustor(signupDto.getIsTrustor()).deceased(false).isFirstLetterCreated(false)
+                .isFirstVideoCreated(false).isFirstVideoCreated(false).hasWritten(false).build();
             usersRepository.save(users);
 
             String token = JWTUtils.generateVerificationToken(iamId);
@@ -147,10 +151,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Users getUser() {
+    public UserDetailsDto getUser() {
         String iamId = JWTUtils.getUserIdFromToken();
-        return usersRepository.findByIamId(iamId)
+        Users user = usersRepository.findByIamId(iamId)
             .orElseThrow(() -> new UserException("User Not Found"));
+        UserDetailsDto userDetailsDto = UserDetailsDto.builder().build();
+        modelMapper.map(user, userDetailsDto);
+        // TODO add user subscription details
+        userDetailsDto.setSubscription(SubscriptionDto.builder().build());
+        // TODO add message count from DB
+        userDetailsDto.setMessagesCount(MessageCountDto.builder().letters(0L).videos(0L).audios(0L).build());
+        return userDetailsDto;
     }
 
     @Override
