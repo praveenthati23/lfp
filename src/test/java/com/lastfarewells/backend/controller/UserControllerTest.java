@@ -9,6 +9,7 @@ import com.lastfarewells.backend.service.UserService;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(UserController.class)
 @ActiveProfiles("test")
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
 
     @MockBean
@@ -25,7 +27,7 @@ public class UserControllerTest {
     @Autowired
     private MockMvc     mvc;
 
-    //@Test
+    @Test
     public void signUp() throws Exception {
         // given
         SignupDto signupDto = new SignupDto("abc@test.in", "pass1234", "FNAME", "LNAME", new Date(),
