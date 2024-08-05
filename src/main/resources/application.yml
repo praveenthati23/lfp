@@ -17,6 +17,11 @@ spring:
         integration:
           envers:
             enabled: true
+  security:
+    oauth2:
+      resourceserver:
+          jwt:
+            issuer-uri: http://localhost:9090/realms/lastfarewells
             
 storj:
  bucketName : <bucketName>
@@ -26,3 +31,16 @@ storj:
  endpointUrl : https://gateway.storjshare.io
  upload.duration : 1
  download.duration : 2
+
+keycloak:
+  auth-server-url: ${KEYCLOAK_URL:http://localhost:9090}
+  credentials:
+    secret: ${KEYCLOAK_SECRET:R0bxZRl1pRTK25W4CEd2Wb3Teanr1BEN}
+  realm: lastfarewells
+  bearer-only: true
+  use-resource-role-mappings: true
+  ssl-required: external
+  resource: lastfarewells-admin
+
+jwt:
+  secret-key: ${JWT_KEY:IrM8Cliyu7LLSo8rDIR4rMtnioM/8BEhftDNwx+zCeg49eBpGoTJELmkmNbRktag7YPQT9he21ti/1WWd55rPw==}

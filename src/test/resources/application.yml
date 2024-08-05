@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        integration:
+          envers:
+            enabled: false
+  profiles:
+    active: test
