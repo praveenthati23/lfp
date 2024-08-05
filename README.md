@@ -33,9 +33,9 @@ Postgres DB running on : localhost:5432
 **5. Keycloak setup**
 
 ```
-• Create a new Realm : hawks  in application.yml {keycloak.realm}
-• Create a new Client in this realm : hawks-admin in application.yml {keycloak.resource}
-• For hawks-admin client -> Enable 'Client authentication' and enable 'Direct access grants' and 
+• Create a new Realm : lastfarewells  in application.yml {keycloak.realm}
+• Create a new Client in this realm : lastfarewells-admin in application.yml {keycloak.resource}
+• For lastfarewells-admin client -> Enable 'Client authentication' and enable 'Direct access grants' and 
   'Service account roles'
 • Copy client secret from Credentials tab : in application.yml {keycloak.credentials.secret}
 • Assign role 'real-management' in 'Service accounts roles' tab
