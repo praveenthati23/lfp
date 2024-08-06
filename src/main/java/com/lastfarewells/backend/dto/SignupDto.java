@@ -33,5 +33,5 @@ public class SignupDto {
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Date   birthDate;
 
-    private Boolean isTrustor = false;
+    private Boolean isMessenger = false;
 }

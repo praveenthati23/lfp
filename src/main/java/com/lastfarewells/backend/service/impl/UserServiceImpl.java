@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             Users users = Users.builder().firstName(signupDto.getFirstName())
                 .lastName(signupDto.getLastName()).iamId(iamId).birthDate(signupDto.getBirthDate())
                 .createdOn(Instant.now()).email(signupDto.getEmail()).roleId(1).emailVerified(false)
-                .isTrustor(signupDto.getIsTrustor()).deceased(false).isFirstLetterCreated(false)
+                .isMessenger(signupDto.getIsMessenger()).deceased(false).isFirstLetterCreated(false)
                 .isFirstVideoCreated(false).isFirstVideoCreated(false).hasWritten(false).build();
             usersRepository.save(users);
 

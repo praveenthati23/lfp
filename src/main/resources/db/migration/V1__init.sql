@@ -54,3 +54,6 @@ CREATE TABLE IF NOT EXISTS Users (
     FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE CASCADE,
     FOREIGN KEY (birth_address_id) REFERENCES addresses(id) ON DELETE CASCADE
 );
+
+ALTER TABLE users
+RENAME COLUMN is_trustor TO is_messenger;

@@ -43,7 +43,7 @@ public class UserDetailsDto {
     private String     email;
     private Boolean    emailVerified;
     private Boolean    status;
-    private Boolean    isTrustor;
+    private Boolean    isMessenger;
     private Instant    lastLogin;
     private Integer    roleId;
 

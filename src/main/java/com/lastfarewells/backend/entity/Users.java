@@ -97,8 +97,8 @@ public class Users {
     private Boolean emailVerified;
     @Column(name = "status")
     private Boolean status;
-    @Column(name = "is_trustor")
-    private Boolean isTrustor;
+    @Column(name = "is_messenger")
+    private Boolean isMessenger;
     @Column(name = "last_login")
     private Instant lastLogin;
     @Column(name = "role_id")
