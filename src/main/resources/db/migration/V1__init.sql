@@ -57,3 +57,17 @@ CREATE TABLE IF NOT EXISTS Users (
 
 ALTER TABLE users
 RENAME COLUMN is_trustor TO is_messenger;
+
+CREATE TABLE IF NOT EXISTS messengers (
+	id serial PRIMARY KEY,
+	messenger_for INT NOT NULL,
+	first_name VARCHAR ( 255 ),
+    last_name VARCHAR ( 255 ),
+    email VARCHAR ( 255 ) NOT NULL,
+    is_confirmed BOOLEAN,
+    invitation_token    TEXT,
+    messenger_user_id INT,
+    custom_message TEXT,
+    created_on TIMESTAMP NOT NULL,
+    updated_on TIMESTAMP
+);
