@@ -1,8 +1,10 @@
 package com.lastfarewells.backend.controller;
 
+import com.lastfarewells.backend.dto.MessengerActionDto;
 import com.lastfarewells.backend.dto.MessengerRequestDto;
 import com.lastfarewells.backend.dto.MessengerResendDto;
 import com.lastfarewells.backend.dto.MessengerVerificationDto;
+import com.lastfarewells.backend.dto.MessengerVerificationResponseDto;
 import com.lastfarewells.backend.entity.Messenger;
 import com.lastfarewells.backend.service.MessengerService;
 import jakarta.validation.Valid;
@@ -45,13 +47,19 @@ public class MessengerController {
     }
 
     @PostMapping("/verify")
-    public Messenger verifyMessengerToken(@RequestBody @Valid MessengerVerificationDto messengerRequestDto) {
+    public MessengerVerificationResponseDto verifyMessengerToken(@RequestBody @Valid MessengerVerificationDto messengerRequestDto) {
         return messengerService.verifyMessengerToken(messengerRequestDto);
     }
 
     @PostMapping("/resend-invitation")
     public ResponseEntity<?> resendMessengerInvitation(@RequestBody @Valid MessengerResendDto messengerResendDto) {
         messengerService.resendMessengerInvitation(messengerResendDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/accept")
+    public ResponseEntity<?> acceptInvitation(@RequestBody @Valid MessengerActionDto messengerActionDto) {
+        messengerService.acceptInvitation(messengerActionDto);
         return ResponseEntity.ok().build();
     }
 

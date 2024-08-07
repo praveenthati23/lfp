@@ -1,12 +1,17 @@
 package com.lastfarewells.backend.service.impl;
 
+import com.lastfarewells.backend.dto.MessengerActionDto;
 import com.lastfarewells.backend.dto.MessengerRequestDto;
 import com.lastfarewells.backend.dto.MessengerResendDto;
 import com.lastfarewells.backend.dto.MessengerVerificationDto;
+import com.lastfarewells.backend.dto.MessengerVerificationResponseDto;
+import com.lastfarewells.backend.dto.MessengerVerificationResponseDto.MessengerForDetails;
 import com.lastfarewells.backend.entity.Messenger;
+import com.lastfarewells.backend.entity.Users;
 import com.lastfarewells.backend.exception.MessengerException;
 import com.lastfarewells.backend.exception.UserException;
 import com.lastfarewells.backend.repository.MessengerRepository;
+import com.lastfarewells.backend.repository.UsersRepository;
 import com.lastfarewells.backend.service.MessengerService;
 import com.lastfarewells.backend.utils.JWTUtils;
 import java.time.Instant;
@@ -23,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class MessengerServiceImpl implements MessengerService {
 
     private final MessengerRepository messengerRepository;
+    private final UsersRepository     usersRepository;
 
     @Override
     public Messenger createMessenger(MessengerRequestDto messengerRequestDto) {
@@ -70,9 +76,19 @@ public class MessengerServiceImpl implements MessengerService {
     }
 
     @Override
-    public Messenger verifyMessengerToken(MessengerVerificationDto messengerRequestDto) {
-        return messengerRepository.findByInvitationToken(messengerRequestDto.getInvitationToken())
+    public MessengerVerificationResponseDto verifyMessengerToken(MessengerVerificationDto messengerRequestDto) {
+        Messenger messenger = messengerRepository.findByInvitationToken(messengerRequestDto.getInvitationToken())
             .orElseThrow(() -> new MessengerException("Invitation token not found"));
+
+        Users messengerForUser = usersRepository.findById(messenger.getMessengerFor())
+            .orElseThrow(() -> new UserException("User not found"));
+
+        Optional<Users> messengerUser = usersRepository.findByEmail(messenger.getEmail());
+
+        MessengerForDetails messengerFor = MessengerForDetails.builder().firstName(messengerForUser.getFirstName())
+            .lastName(messengerForUser.getLastName()).userId(messengerForUser.getId()).build();
+        return MessengerVerificationResponseDto.builder().email(messenger.getEmail()).firstName(messenger.getFirstName())
+            .lastName(messenger.getLastName()).messengerFor(messengerFor).isNewUser(!messengerUser.isPresent()).build();
     }
 
     @Override
@@ -83,11 +99,27 @@ public class MessengerServiceImpl implements MessengerService {
 
         String token = JWTUtils.generateVerificationToken(messenger.getEmail());
         messenger.setInvitationToken(token);
+        messenger.setUpdatedOn(Instant.now());
 
         messengerRepository.save(messenger);
 
         //TODO Send email to Messenger
 
+    }
+
+    @Override
+    public void acceptInvitation(MessengerActionDto messengerActionDto) {
+        Messenger messenger = messengerRepository.findByInvitationToken(messengerActionDto.getInvitationToken())
+            .orElseThrow(() -> new MessengerException("Invitation token not found"));
+
+        if (!messengerActionDto.getIsAccepted()) {
+            log.info("Messenger {} has declined the request for user {}", messenger.getEmail(), messenger.getMessengerFor());
+            messengerRepository.delete(messenger);
+            // TODO send decline mail to MessengerFor
+        } else {
+            log.info("Messenger {} has accepted the request for user {}", messenger.getEmail(), messenger.getMessengerFor());
+
+        }
     }
 
 }

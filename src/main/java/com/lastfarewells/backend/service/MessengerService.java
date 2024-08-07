@@ -1,8 +1,10 @@
 package com.lastfarewells.backend.service;
 
+import com.lastfarewells.backend.dto.MessengerActionDto;
 import com.lastfarewells.backend.dto.MessengerRequestDto;
 import com.lastfarewells.backend.dto.MessengerResendDto;
 import com.lastfarewells.backend.dto.MessengerVerificationDto;
+import com.lastfarewells.backend.dto.MessengerVerificationResponseDto;
 import com.lastfarewells.backend.entity.Messenger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,8 +17,10 @@ public interface MessengerService {
 
     Messenger updateMessenger(Long id, MessengerRequestDto messengerRequestDto);
 
-    Messenger verifyMessengerToken(MessengerVerificationDto messengerRequestDto);
+    MessengerVerificationResponseDto verifyMessengerToken(MessengerVerificationDto messengerRequestDto);
 
     void resendMessengerInvitation(MessengerResendDto messengerResendDto);
+
+    void acceptInvitation(MessengerActionDto messengerActionDto);
 
 }
