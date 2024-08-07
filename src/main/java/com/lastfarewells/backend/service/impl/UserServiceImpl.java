@@ -1,5 +1,18 @@
 package com.lastfarewells.backend.service.impl;
 
+import java.time.Instant;
+import java.util.Map;
+import java.util.Optional;
+
+import org.apache.commons.collections4.map.HashedMap;
+import org.keycloak.representations.AccessTokenResponse;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.lastfarewells.backend.constants.LFareWellConstants;
+import com.lastfarewells.backend.dto.EmailMessage;
 import com.lastfarewells.backend.dto.LoginDto;
 import com.lastfarewells.backend.dto.MessageCountDto;
 import com.lastfarewells.backend.dto.PasswordResetDto;
@@ -13,36 +26,35 @@ import com.lastfarewells.backend.entity.Users;
 import com.lastfarewells.backend.exception.UserAuthenticationException;
 import com.lastfarewells.backend.exception.UserException;
 import com.lastfarewells.backend.repository.UsersRepository;
+import com.lastfarewells.backend.service.EmailService;
 import com.lastfarewells.backend.service.IAMService;
 import com.lastfarewells.backend.service.UserService;
 import com.lastfarewells.backend.utils.JWTUtils;
-import java.time.Instant;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.representations.AccessTokenResponse;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UsersRepository usersRepository;
-    private final IAMService      keycloakService;
-    private final ModelMapper     modelMapper;
+	private final UsersRepository usersRepository;
+	private final IAMService keycloakService;
+	private final ModelMapper modelMapper;
+	private final EmailService emailService;
 
-   /* @Override
-    public Users registerUser(RegisterUserDto registerUserDto) {
-        log.info("Registering User with IAM id : {}", registerUserDto.getIamId());
-        Users users = Users.builder().firstName(registerUserDto.getFirstName())
-            .lastName(registerUserDto.getLastName()).iamId(registerUserDto.getIamId()).birthDate(registerUserDto.getBirthDate())
-            .createdOn(Instant.now()).build();
-        return usersRepository.save(users);
-    }*/
+	@Value("${spring.mail.from}")
+	private String fromAddress;
 
+	/*
+	 * @Override public Users registerUser(RegisterUserDto registerUserDto) {
+	 * log.info("Registering User with IAM id : {}", registerUserDto.getIamId());
+	 * Users users = Users.builder().firstName(registerUserDto.getFirstName())
+	 * .lastName(registerUserDto.getLastName()).iamId(registerUserDto.getIamId()).
+	 * birthDate(registerUserDto.getBirthDate()) .createdOn(Instant.now()).build();
+	 * return usersRepository.save(users); }
+	 */
 
     @Override
     @Transactional
@@ -68,15 +80,29 @@ public class UserServiceImpl implements UserService {
             String token = JWTUtils.generateVerificationToken(iamId);
             //TODO remove println as soon as mail sender is done
             System.out.println("**** : " + token);
-            // send verification email
-            //https://lastfarewells.vercel.app/signup/token
-        } catch (Exception e) {
-            // Compensation action: delete the user from auth service if profile registration fails
-            //userAuthRepository.deleteByEmail(signupDto.getEmail());
-            log.error("User registration failed : {}", e.getMessage());
-            throw new UserException("User registration failed");
-        }
 
+			EmailMessage emailMsg = getEmailMessagePojo(fromAddress, users.getEmail(),
+					LFareWellConstants.SIGN_UP_SUBJECT, LFareWellConstants.SIGN_UP_TEMPLATE,
+					users.getFirstName() + " " + users.getLastName(), token);
+
+			emailService.sendEmail(emailMsg);
+			// https://lastfarewells.vercel.app/signup/token
+		} catch (Exception e) {
+			// Compensation action: delete the user from auth service if profile
+			// registration fails
+			// userAuthRepository.deleteByEmail(signupDto.getEmail());
+			log.error("User registration failed : {}", e.getMessage());
+			throw new UserException("User registration failed");
+		}
+
+	}
+
+	private EmailMessage getEmailMessagePojo(String from, String to, String subject,
+			String templateName, String userName, String token) {
+		Map<String, Object> props  =new HashedMap<>();
+	    props.put(LFareWellConstants.USER_NAME, userName);
+	    props.put(LFareWellConstants.TOKEN, token);
+	    return new EmailMessage(from,to,subject,templateName,props );
     }
 
     @Override
@@ -105,14 +131,19 @@ public class UserServiceImpl implements UserService {
         Users user = usersRepository.findByEmail(email).orElseThrow(() -> new UserException("User with email not found"));
         log.info("User {} requested for password reset", email);
 
-        String token = JWTUtils.generateVerificationToken(user.getIamId());
-        //TODO remove println as soon as mail sender is done
-        System.out.println("**** : " + token);
-        // Store token for validation
-        // Send email
-        //mailService.sendResetPassword(user.getIamId());
-        //https://lastfarewells.vercel.app/reset-password/token
-    }
+		String token = JWTUtils.generateVerificationToken(user.getIamId());
+		// TODO remove println as soon as mail sender is done
+		System.out.println("**** : " + token);
+		// Store token for validation
+	
+		EmailMessage emailMsg = getEmailMessagePojo(fromAddress, user.getEmail(),
+				LFareWellConstants.RESET_PASSWORD_SUBJECT, LFareWellConstants.RESET_PASSWORD_TEMPLATE,
+				user.getFirstName() + " " + user.getLastName(), token);
+		
+		emailService.sendEmail(emailMsg);
+		// mailService.sendResetPassword(user.getIamId());
+		// https://lastfarewells.vercel.app/reset-password/token
+	}
 
     @Override
     public void resetUserPassword(PasswordResetDto passwordResetDto) {

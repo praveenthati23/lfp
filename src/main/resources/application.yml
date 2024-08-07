@@ -22,6 +22,26 @@ spring:
       resourceserver:
           jwt:
             issuer-uri: http://localhost:9090/realms/lastfarewells
+  mail:
+    from: no-reply@shrisinfotech.com
+    default-encoding: UTF-8
+    host: email-smtp.us-east-1.amazonaws.com
+    username: <username>
+    password: <password>
+    port: 587
+    protocol: smtp 
+    test-connection: false
+    properties:
+      mail:
+        debug: true 
+        smtp:
+          auth: true
+          port: 25
+          starttls:
+            enable: true
+        transport:
+          protocol :smtp
+                  
             
 storj:
  bucketName : <bucketName>
