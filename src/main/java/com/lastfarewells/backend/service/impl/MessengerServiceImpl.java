@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -118,7 +119,18 @@ public class MessengerServiceImpl implements MessengerService {
             // TODO send decline mail to MessengerFor
         } else {
             log.info("Messenger {} has accepted the request for user {}", messenger.getEmail(), messenger.getMessengerFor());
+            messenger.setIsConfirmed(true);
+            messenger.setUpdatedOn(Instant.now());
+            messenger.setInvitationToken(StringUtils.EMPTY);
 
+            Optional<Users> messengerUser = usersRepository.findByEmail(messenger.getEmail());
+            if (messengerUser.isPresent()) {
+                messenger.setMessengerUserId(messengerUser.get().getId());
+            }
+            messengerRepository.save(messenger);
+
+            // TODO thank you mail to messenger
+            // TODO acceptance mail to MessengerFor
         }
     }
 
