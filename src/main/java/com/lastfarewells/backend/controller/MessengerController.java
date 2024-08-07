@@ -1,6 +1,8 @@
 package com.lastfarewells.backend.controller;
 
 import com.lastfarewells.backend.dto.MessengerRequestDto;
+import com.lastfarewells.backend.dto.MessengerResendDto;
+import com.lastfarewells.backend.dto.MessengerVerificationDto;
 import com.lastfarewells.backend.entity.Messenger;
 import com.lastfarewells.backend.service.MessengerService;
 import jakarta.validation.Valid;
@@ -8,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +42,17 @@ public class MessengerController {
     @PutMapping("/{id}")
     public Messenger updateMessenger(@PathVariable Long id, @RequestBody @Valid MessengerRequestDto messengerRequestDto) {
         return messengerService.updateMessenger(id, messengerRequestDto);
+    }
+
+    @PostMapping("/verify")
+    public Messenger verifyMessengerToken(@RequestBody @Valid MessengerVerificationDto messengerRequestDto) {
+        return messengerService.verifyMessengerToken(messengerRequestDto);
+    }
+
+    @PostMapping("/resend-invitation")
+    public ResponseEntity<?> resendMessengerInvitation(@RequestBody @Valid MessengerResendDto messengerResendDto) {
+        messengerService.resendMessengerInvitation(messengerResendDto);
+        return ResponseEntity.ok().build();
     }
 
 }

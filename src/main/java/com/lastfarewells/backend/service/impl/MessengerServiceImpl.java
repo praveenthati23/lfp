@@ -1,6 +1,8 @@
 package com.lastfarewells.backend.service.impl;
 
 import com.lastfarewells.backend.dto.MessengerRequestDto;
+import com.lastfarewells.backend.dto.MessengerResendDto;
+import com.lastfarewells.backend.dto.MessengerVerificationDto;
 import com.lastfarewells.backend.entity.Messenger;
 import com.lastfarewells.backend.exception.MessengerException;
 import com.lastfarewells.backend.exception.UserException;
@@ -65,6 +67,27 @@ public class MessengerServiceImpl implements MessengerService {
             //TODO Send email to Messenger
         }
         return messenger;
+    }
+
+    @Override
+    public Messenger verifyMessengerToken(MessengerVerificationDto messengerRequestDto) {
+        return messengerRepository.findByInvitationToken(messengerRequestDto.getInvitationToken())
+            .orElseThrow(() -> new MessengerException("Invitation token not found"));
+    }
+
+    @Override
+    public void resendMessengerInvitation(MessengerResendDto messengerResendDto) {
+        Messenger messenger = messengerRepository.findById(messengerResendDto.getId())
+            .orElseThrow(() -> new MessengerException("Messenger request not found"));
+        log.info("Resending invitation for {} by userId : {}", messenger.getEmail(), messenger.getMessengerFor());
+
+        String token = JWTUtils.generateVerificationToken(messenger.getEmail());
+        messenger.setInvitationToken(token);
+
+        messengerRepository.save(messenger);
+
+        //TODO Send email to Messenger
+
     }
 
 }

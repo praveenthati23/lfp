@@ -12,4 +12,6 @@ public interface MessengerRepository extends JpaRepository<Messenger, Long> {
 
     Page<Messenger> findAllByMessengerFor(Long messengerFor, Pageable pageable);
 
+    Optional<Messenger> findByInvitationToken(String invitationToken);
+
 }
