@@ -1,6 +1,7 @@
 package com.lastfarewells.backend.controller;
 
 import com.lastfarewells.backend.dto.MessengerActionDto;
+import com.lastfarewells.backend.dto.MessengerForDto;
 import com.lastfarewells.backend.dto.MessengerRequestDto;
 import com.lastfarewells.backend.dto.MessengerResendDto;
 import com.lastfarewells.backend.dto.MessengerVerificationDto;
@@ -63,4 +64,10 @@ public class MessengerController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/for/user/{userId}")
+    public Page<MessengerForDto> findAllUsersForMessengerfor(@PathVariable Long userId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
+        return messengerService.findAllUsersForMessengerfor(PageRequest.of(page, size, Sort.by("id").descending()), userId);
+    }
 }

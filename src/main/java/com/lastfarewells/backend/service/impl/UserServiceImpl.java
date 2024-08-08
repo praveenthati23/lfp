@@ -1,11 +1,15 @@
 package com.lastfarewells.backend.service.impl;
 
 
+import com.lastfarewells.backend.entity.Messenger;
+import com.lastfarewells.backend.exception.MessengerException;
+import com.lastfarewells.backend.repository.MessengerRepository;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.keycloak.representations.AccessTokenResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +63,8 @@ public class UserServiceImpl implements UserService {
 	private final UsersRepository usersRepository;
 	private final IAMService keycloakService;
 	private final ModelMapper modelMapper;
-	private final EmailService emailService;
+	private final EmailService        emailService;
+    private final MessengerRepository messengerRepository;
 
 	@Value("${spring.mail.from}")
 	private String fromAddress;
@@ -95,8 +100,17 @@ public class UserServiceImpl implements UserService {
 
             if (signupDto.getIsMessenger()) {
                 // To check possession of invitation token
-                keycloakService.verifyEmail(users.getEmail());
-                return;
+                if (StringUtils.isEmpty(signupDto.getInvitationToken())){
+                    throw new UserException("User invitation token not found");
+                }
+                Messenger messenger = messengerRepository.findByInvitationToken(signupDto.getInvitationToken())
+                    .orElseThrow(() -> new MessengerException("Invitation token not found"));
+
+                if (messenger.getEmail().equalsIgnoreCase(signupDto.getEmail())) {
+                    keycloakService.verifyEmail(users.getEmail());
+                    users.setEmailVerified(true);
+                    return;
+                }
             }
 
             String token = JWTUtils.generateVerificationToken(iamId);

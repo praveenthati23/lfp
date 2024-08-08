@@ -1,6 +1,7 @@
 package com.lastfarewells.backend.service.impl;
 
 import com.lastfarewells.backend.dto.MessengerActionDto;
+import com.lastfarewells.backend.dto.MessengerForDto;
 import com.lastfarewells.backend.dto.MessengerRequestDto;
 import com.lastfarewells.backend.dto.MessengerResendDto;
 import com.lastfarewells.backend.dto.MessengerVerificationDto;
@@ -132,6 +133,11 @@ public class MessengerServiceImpl implements MessengerService {
             // TODO thank you mail to messenger
             // TODO acceptance mail to MessengerFor
         }
+    }
+
+    @Override
+    public Page<MessengerForDto> findAllUsersForMessengerfor(PageRequest pageRequest, Long userId) {
+        return messengerRepository.findAllMessengerForUsers(userId, pageRequest);
     }
 
 }

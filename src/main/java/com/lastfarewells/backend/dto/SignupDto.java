@@ -34,4 +34,5 @@ public class SignupDto {
     private Date   birthDate;
 
     private Boolean isMessenger = false;
+    private String  invitationToken;
 }

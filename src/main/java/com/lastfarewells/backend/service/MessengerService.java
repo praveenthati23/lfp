@@ -1,6 +1,7 @@
 package com.lastfarewells.backend.service;
 
 import com.lastfarewells.backend.dto.MessengerActionDto;
+import com.lastfarewells.backend.dto.MessengerForDto;
 import com.lastfarewells.backend.dto.MessengerRequestDto;
 import com.lastfarewells.backend.dto.MessengerResendDto;
 import com.lastfarewells.backend.dto.MessengerVerificationDto;
@@ -23,4 +24,5 @@ public interface MessengerService {
 
     void acceptInvitation(MessengerActionDto messengerActionDto);
 
+    Page<MessengerForDto> findAllUsersForMessengerfor(PageRequest pageRequest, Long userId);
 }

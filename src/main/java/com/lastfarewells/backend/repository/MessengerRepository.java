@@ -1,10 +1,14 @@
 package com.lastfarewells.backend.repository;
 
+import com.lastfarewells.backend.dto.MessengerForDto;
 import com.lastfarewells.backend.entity.Messenger;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface MessengerRepository extends JpaRepository<Messenger, Long> {
 
@@ -14,4 +18,11 @@ public interface MessengerRepository extends JpaRepository<Messenger, Long> {
 
     Optional<Messenger> findByInvitationToken(String invitationToken);
 
+    @Query(value = "select m.messenger_for as id, u.first_name as firstName, u.last_name as lastName, "
+        + "u.email "
+        + "from messengers m "
+        + "JOIN users u "
+        + "ON m.messenger_for = u.id "
+        + "where m.messenger_user_id = :userId", nativeQuery = true)
+    Page<MessengerForDto> findAllMessengerForUsers(@Param("userId") Long userId, Pageable pageable);
 }
