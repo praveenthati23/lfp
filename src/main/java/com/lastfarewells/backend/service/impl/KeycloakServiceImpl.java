@@ -119,6 +119,12 @@ public class KeycloakServiceImpl implements IAMService {
         }
     }
 
+    @Override
+    public void deleteUser(String userId) {
+        UsersResource usersResource = kcProvider.getInstance().realm(realm).users();
+        usersResource.get(userId).remove();
+    }
+
     private static CredentialRepresentation createPasswordCredentials(String password) {
         CredentialRepresentation passwordCredentials = new CredentialRepresentation();
         passwordCredentials.setTemporary(false);

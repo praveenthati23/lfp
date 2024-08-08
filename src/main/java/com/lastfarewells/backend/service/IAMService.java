@@ -18,4 +18,5 @@ public interface IAMService {
 
     void verifyEmail(String email);
 
+    void deleteUser(String userId);
 }

@@ -101,12 +101,16 @@ public class UserServiceImpl implements UserService {
             if (signupDto.getIsMessenger()) {
                 // To check possession of invitation token
                 if (StringUtils.isEmpty(signupDto.getInvitationToken())){
+                   // usersRepository.delete(users);
+                    keycloakService.deleteUser(iamId);
                     throw new UserException("User invitation token not found");
                 }
-                Messenger messenger = messengerRepository.findByInvitationToken(signupDto.getInvitationToken())
-                    .orElseThrow(() -> new MessengerException("Invitation token not found"));
-
-                if (messenger.getEmail().equalsIgnoreCase(signupDto.getEmail())) {
+                Optional<Messenger> messenger = messengerRepository.findByInvitationToken(signupDto.getInvitationToken());
+                if (!messenger.isPresent()) {
+                    keycloakService.deleteUser(iamId);
+                    throw new UserException("Invitation token not found");
+                }
+                if (messenger.get().getEmail().equalsIgnoreCase(signupDto.getEmail())) {
                     keycloakService.verifyEmail(users.getEmail());
                     users.setEmailVerified(true);
                     return;
