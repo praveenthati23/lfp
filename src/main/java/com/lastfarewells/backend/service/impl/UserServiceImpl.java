@@ -1,5 +1,18 @@
 package com.lastfarewells.backend.service.impl;
 
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.Optional;
+
+import org.apache.commons.collections4.map.HashedMap;
+import org.keycloak.representations.AccessTokenResponse;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
 import com.lastfarewells.backend.constants.LFareWellConstants;
 import com.lastfarewells.backend.dto.EmailMessage;
 import com.lastfarewells.backend.dto.LoginDto;
@@ -19,6 +32,11 @@ import com.lastfarewells.backend.service.EmailService;
 import com.lastfarewells.backend.service.IAMService;
 import com.lastfarewells.backend.service.UserService;
 import com.lastfarewells.backend.utils.JWTUtils;
+
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
@@ -31,28 +49,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UsersRepository usersRepository;
-    private final IAMService      keycloakService;
-    private final ModelMapper     modelMapper;
-    private final EmailService    emailService;
 
-    @Value("${spring.mail.from}")
-    private String fromAddress;
+	private final UsersRepository usersRepository;
+	private final IAMService keycloakService;
+	private final ModelMapper modelMapper;
+	private final EmailService emailService;
 
-    /*
-     * @Override public Users registerUser(RegisterUserDto registerUserDto) {
-     * log.info("Registering User with IAM id : {}", registerUserDto.getIamId());
-     * Users users = Users.builder().firstName(registerUserDto.getFirstName())
-     * .lastName(registerUserDto.getLastName()).iamId(registerUserDto.getIamId()).
-     * birthDate(registerUserDto.getBirthDate()) .createdOn(Instant.now()).build();
-     * return usersRepository.save(users); }
-     */
+	@Value("${spring.mail.from}")
+	private String fromAddress;
 
+	/*
+	 * @Override public Users registerUser(RegisterUserDto registerUserDto) {
+	 * log.info("Registering User with IAM id : {}", registerUserDto.getIamId());
+	 * Users users = Users.builder().firstName(registerUserDto.getFirstName())
+	 * .lastName(registerUserDto.getLastName()).iamId(registerUserDto.getIamId()).
+	 * birthDate(registerUserDto.getBirthDate()) .createdOn(Instant.now()).build();
+	 * return usersRepository.save(users); }
+	 */
     @Override
     @Transactional
     public void registerUser(SignupDto signupDto) {
@@ -84,6 +103,7 @@ public class UserServiceImpl implements UserService {
             //TODO remove println as soon as mail sender is done
             System.out.println("**** : " + token);
 
+
             EmailMessage emailMsg = getEmailMessagePojo(fromAddress, users.getEmail(),
                 LFareWellConstants.SIGN_UP_SUBJECT, LFareWellConstants.SIGN_UP_TEMPLATE,
                 users.getFirstName() + " " + users.getLastName(), token);
@@ -98,15 +118,18 @@ public class UserServiceImpl implements UserService {
             throw new UserException("User registration failed");
         }
 
+	}
+
+	private EmailMessage getEmailMessagePojo(String from, String to, String subject,
+			String templateName, String userName, String token) {
+		Map<String, Object> props  =new HashedMap<>();
+	    props.put(LFareWellConstants.USER_NAME, userName);
+	    props.put(LFareWellConstants.TOKEN, token);
+	    props.put(LFareWellConstants.SUBJECT, subject);
+	    return new EmailMessage(from,to,subject,templateName,props );
     }
 
-    private EmailMessage getEmailMessagePojo(String from, String to, String subject,
-        String templateName, String userName, String token) {
-        Map<String, Object> props = new HashedMap<>();
-        props.put(LFareWellConstants.USER_NAME, userName);
-        props.put(LFareWellConstants.TOKEN, token);
-        return new EmailMessage(from, to, subject, templateName, props);
-    }
+
 
     @Override
     public UserAccessTokenDto authenticateUser(LoginDto loginDto) {
@@ -147,6 +170,7 @@ public class UserServiceImpl implements UserService {
         // mailService.sendResetPassword(user.getIamId());
         // https://lastfarewells.vercel.app/reset-password/token
     }
+
 
     @Override
     public void resetUserPassword(PasswordResetDto passwordResetDto) {

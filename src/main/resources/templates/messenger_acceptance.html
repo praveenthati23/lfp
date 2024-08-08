@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>${subject}</title>
+   
+</head>
+<body>
+    <p th:text="'Dear ' + ${userName} + ','"></p>
+   
+    <p th:text="'Good news! ' + ${messenger} + ' has accepted your invitation to be a Messenger on Last Farewells. Your network of support is growing!'"></p>
+    
+    <p th:text="'With this ' + ${nth_value} +' Messenger confirmation, you have the opportunity to add up to ' + ${still_more_value} + ' more Messengers, enhancing your circle of care.'"></p>
+    
+    <p th:text="'Why not take a moment now to write a special message for ' + ${messenger} + ' or other loved ones? It\'s a meaningful way to deepen connections and leave no words left unspoken.'"></p>
+     
+    <p>Visit your dashboard to create this message or explore other ways to celebrate your legacy.</p>
+    
+    <p>For any assistance or questions, just reply to this email.</p>
+   
+    
+    <p>Best wishes,</p>
+    <p>The Last Farewells Team</p>
+    
+</body>
+</html>

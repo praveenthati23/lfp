@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>${subject}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 10px 0;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .invite-button {
+            display: inline-block;
+            background-color: #6366f1;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 20px;
+            border-radius: 5px;
+           
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #888888;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <p th:text="'Dear ' + ${messenger} + ','"></p>
+    <p th:text="'You\'ve been selected by '+${userName} +' to be a Messenger on Last Farewells. It\'s a role that signifies trust and responsibility.'"></p>
+    <p>Curious about Last Farewells? We're a digital platform that lets people create last messages and design their memorial page that will be released after their future passing. Our mission is to ensure no words are left unspoken, and your role as a messenger will be essential to that.</p>
+     <p th:text="'You will be one of the individuals who will notify us in the event of '+${userName} +'\'s passing. This important responsibility ensures that their last messages and memorial page will be released.'"></p>
+  <p>If you have any questions about Last Farewells or the responsibilities of a Messenger, please feel free to explore our FAQ page or reach out to us for assistance.</p>
+  
+  
+     <a th:href="@{|https://lastfarewells.vercel.app/messengers/${token}|}" class="invite-button">CONFIRM MY ROLE AS MESSENGER</a> 
+    
+    
+    
+    <p>Warm Regards,</p>
+    <p>The Last Farewells Team</p>
+    
+</body>
+</html>

@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <title>${subject}</title>
-
-    <title>Email Verification</title>
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,12 +24,12 @@
         .content {
             margin: 20px 0;
         }
-        .verify-button {
+        .invite-button {
             display: inline-block;
             background-color: #6366f1;
             color: #ffffff;
             text-decoration: none;
-            padding: 10px 15px;
+            padding: 15px 20px;
             border-radius: 5px;
            
         }
@@ -46,15 +42,20 @@
     </style>
 </head>
 <body>
-    <p th:text="'Hello, ' + ${userName} + '!'"></p>
-    <p>Welcome to Last Farewells! In order to start using the system we ask that you please verify your Last Farewells account by clicking the button below:
-</p>
+    <p th:text="'Dear, ' + ${messenger} + '!'"></p>
+    <p th:text="'We\'re following up on your invitation to become a Messenger for ' + ${userName} + ' on Last Farewells. Your confirmation is vital for the completion of their account setup and we\'re yet to receive it.'"></p>
+    
+    
+      <a th:href="@{|https://lastfarewells.vercel.app/messengers/${token}|}" class="invite-button">CONFIRM MESSENGER INVITATION</a> 
+    
+    <p th:text="'Please let us know your decision by ' + ${date} + '. It\'s important for '  + ${userName} +' to have their Messenger in place. If we don\'t receive a response by the specified date, we will inform '  + ${userName} + ' that you are not available to accept this role.'"></p>
+    
+    <p>Should you have any questions or need more information, our Messenger FAQ page is here to help, or feel free to contact our support team.</p>
+     
+    <p>We appreciate your prompt attention to this request</p>
   
-     <a th:href="@{|https://lastfarewells.vercel.app/signup/${token}|}" class="verify-button">Verify Email</a> 
-    
-    
-    <p>We are excited to have you get started and ensure that no words are left unspoken.</p>
-    <p>Regards,</p>
+  
+    <p>Thank you,</p>
     <p>The Last Farewells Team</p>
     
 </body>
