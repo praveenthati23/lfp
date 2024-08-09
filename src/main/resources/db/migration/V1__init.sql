@@ -71,3 +71,20 @@ CREATE TABLE IF NOT EXISTS messengers (
     created_on TIMESTAMP NOT NULL,
     updated_on TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS death_report (
+	id serial PRIMARY KEY,
+	messenger_id INT NOT NULL,
+	death_date DATE NOT NULL,
+    attachment TEXT,
+    attachment_filename VARCHAR ( 255 ),
+    obituary_link TEXT,
+    is_verified BOOLEAN,
+    verified_by INT,
+    verified_at TIMESTAMP,
+    status VARCHAR ( 50 ),
+    status_note TEXT,
+    custom_note TEXT,
+    created_on TIMESTAMP NOT NULL,
+    updated_on TIMESTAMP
+);

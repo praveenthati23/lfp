@@ -31,7 +31,7 @@ public class UserControllerTest {
     public void signUp() throws Exception {
         // given
         SignupDto signupDto = new SignupDto("abc@test.in", "pass1234", "FNAME", "LNAME", new Date(),
-            false);
+            false, null);
 
         doNothing().when(userService).registerUser(signupDto);
 
