@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS messengers (
 
 CREATE TABLE IF NOT EXISTS death_report (
 	id serial PRIMARY KEY,
-	messenger_id INT NOT NULL,
+	user_id INT NOT NULL,
 	death_date DATE NOT NULL,
     attachment TEXT,
     attachment_filename VARCHAR ( 255 ),

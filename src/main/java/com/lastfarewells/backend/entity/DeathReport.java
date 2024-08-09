@@ -26,8 +26,8 @@ public class DeathReport {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "messenger_id")
-    private Long    messengerId;
+    @Column(name = "user_id")
+    private Long    userId;
     @Column(name = "death_date")
     private Date    deathDate;
     @Column(name = "attachment")
