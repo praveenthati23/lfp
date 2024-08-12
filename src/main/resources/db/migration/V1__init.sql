@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS death_report (
 
 CREATE TABLE IF NOT EXISTS recipient (
 	id serial PRIMARY KEY,
-	user_id INT,
+	user_id INT NOT NULL,
 	first_name VARCHAR ( 255 ),
     last_name VARCHAR ( 255 ),
     email VARCHAR ( 255 ) NOT NULL,
