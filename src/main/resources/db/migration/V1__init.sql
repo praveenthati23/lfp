@@ -96,5 +96,6 @@ CREATE TABLE IF NOT EXISTS recipient (
     last_name VARCHAR ( 255 ),
     email VARCHAR ( 255 ) NOT NULL,
     created_on TIMESTAMP NOT NULL,
-    updated_on TIMESTAMP
+    updated_on TIMESTAMP,
+    is_user_recipient BOOLEAN
 );

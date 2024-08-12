@@ -37,5 +37,6 @@ public class Recipient {
     private Instant createdOn;
     @Column(name = "updated_on")
     private Instant updatedOn;
-
+    @Column(name = "is_user_recipient")
+    private Boolean isUserRecipient;
 }
