@@ -22,14 +22,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EmailSenderServiceImpl implements EmailService {
 
-	
-	
+
+
     private final JavaMailSender mailSender;
 
-	
+
 	 private final SpringTemplateEngine springTemplateEngine;
 
 	public void sendEmail(EmailMessage emailMessage) {
+		log.info("Sending mail {}", emailMessage.getTo());
 		 String content = getHtmlContent(emailMessage);
 	        try {
 	        	 MimeMessage message = mailSender.createMimeMessage();
@@ -43,7 +44,7 @@ public class EmailSenderServiceImpl implements EmailService {
 			} catch (Exception e) {
 				log.error("Error while sending email: "+e.getStackTrace());
 			}
-	       
+
 	}
 
 	private String getHtmlContent(EmailMessage emailMessage) {

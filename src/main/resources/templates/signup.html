@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 
-    <title>${subject}</title>
+   <!-- <title>${subject}</title>
 
-    <title>Email Verification</title>
+    <title>Email Verification</title>-->
 
     <style>
         body {
@@ -46,11 +46,11 @@
     </style>
 </head>
 <body>
-    <p th:text="'Hello, ' + ${userName} + '!'"></p>
+    <p th:text="'Hello ' + ${userName} + ','"></p><br>
     <p>Welcome to Last Farewells! In order to start using the system we ask that you please verify your Last Farewells account by clicking the button below:
-</p>
+</p><br>
   
-     <a th:href="@{|https://lastfarewells.vercel.app/signup/${token}|}" class="verify-button">Verify Email</a> 
+     <a th:href="@{|https://lastfarewells.vercel.app/signup/${token}|}" class="verify-button">Verify Email</a> <br>
     
     
     <p>We are excited to have you get started and ensure that no words are left unspoken.</p>
