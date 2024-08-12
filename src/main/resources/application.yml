@@ -26,8 +26,8 @@ spring:
     from: no-reply@shrisinfotech.com
     default-encoding: UTF-8
     host: email-smtp.us-east-1.amazonaws.com
-    username: AKIA4MTWINIY3G2L3QO5
-    password: BKkv9r1pr7LzfpcyitOsse/dZ+MBZ7C+vY7FkDz0EuPF
+    username: <username>
+    password: <password>
     port: 587
     protocol: smtp 
     test-connection: false
