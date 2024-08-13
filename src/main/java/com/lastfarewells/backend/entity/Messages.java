@@ -1,5 +1,6 @@
 package com.lastfarewells.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,10 +38,12 @@ public class Messages {
 
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "recipient_id", referencedColumnName = "id", nullable = true)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Recipient recipient;
 
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "messenger_id", referencedColumnName = "id", nullable = true)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Messenger messenger;
 
     @Enumerated(EnumType.STRING)
