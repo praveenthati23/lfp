@@ -99,3 +99,22 @@ CREATE TABLE IF NOT EXISTS recipient (
     updated_on TIMESTAMP,
     is_user_recipient BOOLEAN
 );
+
+CREATE TABLE IF NOT EXISTS Messages (
+	id serial PRIMARY KEY,
+	user_id INT NOT NULL,
+	recipient_id INT,
+	messenger_id INT,
+	status VARCHAR ( 50 ),
+	message_type VARCHAR ( 50 ) NOT NULL,
+	title TEXT,
+	description TEXT,
+	content TEXT,
+	file_name TEXT,
+	deliver_on_death BOOLEAN,
+	delivery_method VARCHAR ( 50 ),
+	schedule_type VARCHAR ( 50 ) NOT NULL,
+	delivery_date DATE,
+    created_on TIMESTAMP NOT NULL,
+    updated_on TIMESTAMP
+);

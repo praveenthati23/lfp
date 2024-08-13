@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.lastfarewells.backend.entity.PresignedUrl;
 
-@Repository
 public interface PresignedUrlRepository extends JpaRepository<PresignedUrl, Long> {
 
 	PresignedUrl findByKey(String key);
