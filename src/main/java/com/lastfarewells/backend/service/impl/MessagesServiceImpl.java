@@ -45,11 +45,14 @@ public class MessagesServiceImpl implements MessagesService {
         }
 
         if (messagesDto.getRecipient() != null) {
-            Recipient recipient = Recipient.builder()
-                .userId(messagesDto.getUserId()).firstName(messagesDto.getRecipient().getFirstName())
-                .lastName(messagesDto.getRecipient().getLastName())
-                .email(messagesDto.getRecipient().getEmail()).createdOn(Instant.now())
-                .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).build();
+            Recipient recipient = messagesDto.getRecipient().getId() != null ?
+                recipientRepository.findById(messagesDto.getRecipient().getId()).orElseThrow(() -> new MessengesException("Invalid recipient"))
+                :
+                    Recipient.builder()
+                        .userId(messagesDto.getUserId()).firstName(messagesDto.getRecipient().getFirstName())
+                        .lastName(messagesDto.getRecipient().getLastName())
+                        .email(messagesDto.getRecipient().getEmail()).createdOn(Instant.now())
+                        .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).build();
             messages.setRecipient(recipientRepository.save(recipient));
         }
         if (messagesDto.getMessenger() != null) {
@@ -93,14 +96,22 @@ public class MessagesServiceImpl implements MessagesService {
             messages.setMessenger(messenger);
         }
         if (messagesDto.getRecipient() != null) {
+            if (messagesDto.getRecipient().getId() == null) {
+                throw new MessengesException("Invalid recipient Id");
+            }
             Recipient recipient = messages.getRecipient();
-            recipient.setFirstName(messagesDto.getRecipient().getFirstName());
-            recipient.setLastName(messagesDto.getRecipient().getLastName());
-            recipient.setEmail(messagesDto.getRecipient().getEmail());
-            recipient.setIsUserRecipient(messagesDto.getRecipient().getIsUserRecipient());
-            recipient.setUpdatedOn(Instant.now());
+            if (messages.getRecipient().getId().equals(messagesDto.getRecipient().getId())) {
+                recipient.setFirstName(messagesDto.getRecipient().getFirstName());
+                recipient.setLastName(messagesDto.getRecipient().getLastName());
+                recipient.setEmail(messagesDto.getRecipient().getEmail());
+                recipient.setIsUserRecipient(messagesDto.getRecipient().getIsUserRecipient());
+                recipient.setUpdatedOn(Instant.now());
+                messages.setRecipient(recipientRepository.save(recipient));
+            } else {
+                messages.setRecipient(recipientRepository.findById(messagesDto.getRecipient().getId())
+                    .orElseThrow(() -> new MessengesException("Invalid recipient")));
+            }
 
-            messages.setRecipient(recipientRepository.save(recipient));
         }
         return messagesRepository.save(messages);
     }

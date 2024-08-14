@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MessengeRecipientDto {
 
+    private Long    id;
     private String firstName;
     private String lastName;
     private String email;
