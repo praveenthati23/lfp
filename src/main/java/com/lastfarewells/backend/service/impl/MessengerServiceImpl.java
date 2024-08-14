@@ -57,7 +57,7 @@ public class MessengerServiceImpl implements MessengerService {
             .firstName(messengerRequestDto.getFirstName()).lastName(messengerRequestDto.getLastName())
             .email(messengerRequestDto.getEmail()).isConfirmed(false).invitationToken(token)
             .createdOn(Instant.now()).build();
-      //  messengerRepository.save(messenger);
+        messengerRepository.save(messenger);
 
         //TODO Send email to Messenger
 
