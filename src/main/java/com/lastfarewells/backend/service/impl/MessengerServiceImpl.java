@@ -19,6 +19,7 @@ import com.lastfarewells.backend.service.EmailService;
 import com.lastfarewells.backend.service.MessengerService;
 import com.lastfarewells.backend.utils.JWTUtils;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @Slf4j
@@ -59,8 +61,7 @@ public class MessengerServiceImpl implements MessengerService {
             .createdOn(Instant.now()).build();
         messengerRepository.save(messenger);
 
-        //TODO Send email to Messenger
-
+        // Send email to Messenger
         Map<String, Object> props = new HashedMap<>();
         props.put(LFareWellConstants.MESSENGER,
             messenger.getFirstName() + (StringUtils.isNotEmpty(messenger.getLastName()) ? " " + messenger.getLastName() : ""));
@@ -92,8 +93,22 @@ public class MessengerServiceImpl implements MessengerService {
         messenger.setEmail(messengerRequestDto.getEmail());
 
         messengerRepository.save(messenger);
-        if (existingEmail.equalsIgnoreCase(messenger.getEmail())) {
-            //TODO Send email to Messenger
+        if (!existingEmail.equalsIgnoreCase(messenger.getEmail())) {
+            String token = JWTUtils.generateVerificationToken(messengerRequestDto.getEmail());
+            messenger.setInvitationToken(token);
+            messengerRepository.save(messenger);
+
+            // Send email to Messenger
+            Map<String, Object> props = new HashedMap<>();
+            props.put(LFareWellConstants.MESSENGER,
+                messenger.getFirstName() + (StringUtils.isNotEmpty(messenger.getLastName()) ? " " + messenger.getLastName() : ""));
+            props.put(LFareWellConstants.USER_NAME, JWTUtils.getCurrentUserSub());
+            props.put(LFareWellConstants.TOKEN, token);
+
+            EmailMessage emailMsg = emailBuilder(fromAddress, messenger.getEmail(),
+                LFareWellConstants.MESSENGER_INVITATION_SUBJECT, LFareWellConstants.MESSENGER_INVITATION_TEMPLATE, props);
+
+            emailService.sendEmail(emailMsg);
         }
         return messenger;
     }
@@ -126,8 +141,22 @@ public class MessengerServiceImpl implements MessengerService {
 
         messengerRepository.save(messenger);
 
-        //TODO Send email to Messenger
+        // Send email to Messenger
+        String currentUser = JWTUtils.getCurrentUserSub();
+        Map<String, Object> props = new HashedMap<>();
+        props.put(LFareWellConstants.MESSENGER,
+            messenger.getFirstName() + (StringUtils.isNotEmpty(messenger.getLastName()) ? " " + messenger.getLastName() : ""));
+        props.put(LFareWellConstants.USER_NAME, currentUser);
+        props.put(LFareWellConstants.TOKEN, token);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM dd, yyyy");
+        LocalDate currentDate = LocalDate.now().plusMonths(1);
+        props.put(LFareWellConstants.DATE, currentDate.format(formatter));
+
+        EmailMessage emailMsg = emailBuilder(fromAddress, messenger.getEmail(),
+            LFareWellConstants.MESSENGER_INVITATION_REMINDER_SUBJECT.replace("####", currentUser), LFareWellConstants.MESSENGER_INVITATION_REMINDER_TEMPLATE, props);
+
+        emailService.sendEmail(emailMsg);
     }
 
     @Override
