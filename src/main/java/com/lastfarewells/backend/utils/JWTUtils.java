@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.Date;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -68,6 +69,15 @@ public class JWTUtils {
     public static String getUserIdFromToken() {
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return jwt.getClaimAsString("sub");
+    }
+
+    public static String getCurrentUserSub() {
+        JwtAuthenticationToken authentication =
+            (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+        Jwt jwt = (Jwt) authentication.getToken();
+
+        return jwt.getClaimAsString("name"); // This retrieves the "name" field
     }
 
 }

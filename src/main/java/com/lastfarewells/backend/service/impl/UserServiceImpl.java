@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
 
             String token = JWTUtils.generateVerificationToken(iamId);
             //TODO remove println as soon as mail sender is done
-            System.out.println("**** : " + token);
+            //System.out.println("**** : " + token);
 
 
             EmailMessage emailMsg = getEmailMessagePojo(fromAddress, users.getEmail(),

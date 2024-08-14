@@ -1,5 +1,7 @@
 package com.lastfarewells.backend.service.impl;
 
+import com.lastfarewells.backend.constants.LFareWellConstants;
+import com.lastfarewells.backend.dto.EmailMessage;
 import com.lastfarewells.backend.dto.MessengerActionDto;
 import com.lastfarewells.backend.dto.MessengerForDto;
 import com.lastfarewells.backend.dto.MessengerRequestDto;
@@ -13,13 +15,17 @@ import com.lastfarewells.backend.exception.MessengerException;
 import com.lastfarewells.backend.exception.UserException;
 import com.lastfarewells.backend.repository.MessengerRepository;
 import com.lastfarewells.backend.repository.UsersRepository;
+import com.lastfarewells.backend.service.EmailService;
 import com.lastfarewells.backend.service.MessengerService;
 import com.lastfarewells.backend.utils.JWTUtils;
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,6 +37,10 @@ public class MessengerServiceImpl implements MessengerService {
 
     private final MessengerRepository messengerRepository;
     private final UsersRepository     usersRepository;
+    private final EmailService        emailService;
+
+    @Value("${spring.mail.from}")
+    private String fromAddress;
 
     @Override
     public Messenger createMessenger(MessengerRequestDto messengerRequestDto) {
@@ -47,9 +57,20 @@ public class MessengerServiceImpl implements MessengerService {
             .firstName(messengerRequestDto.getFirstName()).lastName(messengerRequestDto.getLastName())
             .email(messengerRequestDto.getEmail()).isConfirmed(false).invitationToken(token)
             .createdOn(Instant.now()).build();
-        messengerRepository.save(messenger);
+      //  messengerRepository.save(messenger);
 
         //TODO Send email to Messenger
+
+        Map<String, Object> props = new HashedMap<>();
+        props.put(LFareWellConstants.MESSENGER,
+            messenger.getFirstName() + (StringUtils.isNotEmpty(messenger.getLastName()) ? " " + messenger.getLastName() : ""));
+        props.put(LFareWellConstants.USER_NAME, JWTUtils.getCurrentUserSub());
+        props.put(LFareWellConstants.TOKEN, token);
+
+        EmailMessage emailMsg = emailBuilder(fromAddress, messenger.getEmail(),
+            LFareWellConstants.MESSENGER_INVITATION_SUBJECT, LFareWellConstants.MESSENGER_INVITATION_TEMPLATE, props);
+
+        emailService.sendEmail(emailMsg);
 
         return messenger;
     }
@@ -138,6 +159,15 @@ public class MessengerServiceImpl implements MessengerService {
     @Override
     public Page<MessengerForDto> findAllUsersForMessengerfor(PageRequest pageRequest, Long userId) {
         return messengerRepository.findAllMessengerForUsers(userId, pageRequest);
+    }
+
+    private EmailMessage emailBuilder(String from, String to, String subject,
+        String templateName, Map<String, Object> props) {
+       /* Map<String, Object> props  =new HashedMap<>();
+        props.put(LFareWellConstants.USER_NAME, userName);
+        props.put(LFareWellConstants.TOKEN, token);
+        props.put(LFareWellConstants.SUBJECT, subject);*/
+        return new EmailMessage(from, to, subject, templateName, props);
     }
 
 }
