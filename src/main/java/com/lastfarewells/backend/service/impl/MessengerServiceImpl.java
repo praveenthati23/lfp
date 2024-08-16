@@ -20,6 +20,7 @@ import com.lastfarewells.backend.service.MessengerService;
 import com.lastfarewells.backend.utils.JWTUtils;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @Slf4j
@@ -169,6 +169,8 @@ public class MessengerServiceImpl implements MessengerService {
             messengerRepository.delete(messenger);
             // TODO send decline mail to MessengerFor
         } else {
+            Users messengerForUser = usersRepository.findById(messenger.getMessengerFor())
+                .orElseThrow(() -> new MessengerException("Invalid token not found"));
             log.info("Messenger {} has accepted the request for user {}", messenger.getEmail(), messenger.getMessengerFor());
             messenger.setIsConfirmed(true);
             messenger.setUpdatedOn(Instant.now());
@@ -180,8 +182,25 @@ public class MessengerServiceImpl implements MessengerService {
             }
             messengerRepository.save(messenger);
 
-            // TODO thank you mail to messenger
-            // TODO acceptance mail to MessengerFor
+            //  Thank you mail to messenger
+            Map<String, Object> props = new HashedMap<>();
+            props.put(LFareWellConstants.MESSENGER,
+                messenger.getFirstName() + (StringUtils.isNotEmpty(messenger.getLastName()) ? " " + messenger.getLastName() : ""));
+            props.put(LFareWellConstants.USER_NAME, messengerForUser.getFirstName() + (StringUtils.isNotEmpty(messengerForUser.getLastName()) ? " " + messengerForUser.getLastName() : ""));
+
+            EmailMessage welcomeEmailMsg = emailBuilder(fromAddress, messenger.getEmail(),
+                LFareWellConstants.MESSENGER_WELCOME_SUBJECT, LFareWellConstants.MESSENGER_WELCOME_TEMPLATE, props);
+
+            emailService.sendEmail(welcomeEmailMsg);
+
+            // Acceptance mail to MessengerFor
+            Long confirmedMessengers = messengerRepository.countByMessengerForAndIsConfirmedTrue(messenger.getMessengerFor());
+            props.put(LFareWellConstants.N_TH_VALUE, convertNumberToOrdinal(Math.toIntExact(confirmedMessengers)));
+            props.put(LFareWellConstants.STILL_MORE_VALUE, 3l-confirmedMessengers);
+            EmailMessage acceptanceEmailMsg = emailBuilder(fromAddress, messengerForUser.getEmail(),
+                LFareWellConstants.MESSENGER_ACCEPTANCE_SUBJECT, LFareWellConstants.MESSENGER_ACCEPTANCE_TEMPLATE, props);
+
+            emailService.sendEmail(acceptanceEmailMsg);
         }
     }
 
@@ -192,11 +211,18 @@ public class MessengerServiceImpl implements MessengerService {
 
     private EmailMessage emailBuilder(String from, String to, String subject,
         String templateName, Map<String, Object> props) {
-       /* Map<String, Object> props  =new HashedMap<>();
-        props.put(LFareWellConstants.USER_NAME, userName);
-        props.put(LFareWellConstants.TOKEN, token);
-        props.put(LFareWellConstants.SUBJECT, subject);*/
         return new EmailMessage(from, to, subject, templateName, props);
     }
 
+    public String convertNumberToOrdinal(int number) {
+        // Array containing ordinal words
+        String[] ordinals = {"zero", "first", "second", "third"};
+
+        // Handle out-of-bound cases
+        if (number >= 1 && number < ordinals.length) {
+            return ordinals[number];
+        } else {
+            return number + "th"; // Default case for numbers beyond 10
+        }
+    }
 }

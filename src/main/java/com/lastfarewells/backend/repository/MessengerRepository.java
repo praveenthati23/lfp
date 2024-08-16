@@ -42,4 +42,6 @@ public interface MessengerRepository extends JpaRepository<Messenger, Long> {
         + "ON u.id = d.user_id "
         + "where m.messenger_user_id = :userId", nativeQuery = true)
     Page<MessengerForDto> findAllMessengerForUsers(@Param("userId") Long userId, Pageable pageable);
+
+    long countByMessengerForAndIsConfirmedTrue(Long messengerFor);
 }
