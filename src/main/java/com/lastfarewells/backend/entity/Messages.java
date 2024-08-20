@@ -73,6 +73,8 @@ public class Messages {
     private ScheduleTypeEnum   scheduleType;
     @Column(name = "delivery_date")
     private Date               deliveryDate;
+    @Column(name = "event_title")
+    private String  eventTitle;
 
     @Column(name = "created_on")
     private Instant createdOn;

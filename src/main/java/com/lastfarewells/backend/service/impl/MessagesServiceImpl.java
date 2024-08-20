@@ -38,6 +38,7 @@ public class MessagesServiceImpl implements MessagesService {
             .title(messagesDto.getTitle()).description(messagesDto.getDescription())
             .content(messagesDto.getContent()).fileName(messagesDto.getFileName())
             .deliverOnDeath(messagesDto.getDeliverOnDeath()).deliveryMethod(messagesDto.getDeliveryMethod())
+            .eventTitle(messagesDto.getEventTitle())
             .scheduleType(messagesDto.getScheduleType()).deliveryDate(messagesDto.getDeliveryDate()).build();
         messages.setStatus(MessageStatusEnum.COMPLETED);
         if (messages.getDeliveryMethod() == null) {
@@ -89,6 +90,7 @@ public class MessagesServiceImpl implements MessagesService {
         }
         messages.setScheduleType(messagesDto.getScheduleType());
         messages.setDeliveryDate(messagesDto.getDeliveryDate());
+        messages.setEventTitle(messagesDto.getEventTitle());
         messages.setUpdatedOn(Instant.now());
         if (messagesDto.getMessenger() != null && !messagesDto.getMessenger().equals(messages.getMessenger())) {
             Messenger messenger = messengerRepository.findById(messagesDto.getMessenger())

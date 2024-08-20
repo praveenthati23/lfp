@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, List<String>>> handleValidationErrors(MethodArgumentNotValidException ex) {
         List<String> errors = ex.getBindingResult().getFieldErrors()
             .stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
+
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
@@ -56,5 +57,22 @@ public class GlobalExceptionHandler {
             status
         );
     }
+
+    /*@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleEnumTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        if (ex.getRequiredType().isEnum()) {
+            String errorMessage = String.format("Invalid value '%s' for parameter '%s'. Allowed values are: %s",
+                ex.getValue(),
+                ex.getName(),
+                ex.getRequiredType().getEnumConstants());
+            return new ResponseEntity<>(
+                new ErrorResponse(status, errorMessage), status
+            );
+        }
+        return new ResponseEntity<>(
+            new ErrorResponse(status, "Invalid request parameter"), status
+        );
+    }*/
 
 }

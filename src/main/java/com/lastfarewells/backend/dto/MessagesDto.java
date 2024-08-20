@@ -28,6 +28,7 @@ public class MessagesDto {
     private String               content;
     private String               fileName;
     private Boolean              deliverOnDeath;
+    private String               eventTitle;
 
     private DeliveryMethodEnum deliveryMethod;
     private ScheduleTypeEnum   scheduleType;

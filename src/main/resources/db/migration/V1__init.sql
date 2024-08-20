@@ -118,3 +118,14 @@ CREATE TABLE IF NOT EXISTS Messages (
     created_on TIMESTAMP NOT NULL,
     updated_on TIMESTAMP
 );
+
+ALTER TABLE Messages
+ADD COLUMN event_title VARCHAR ( 255 );
+
+CREATE TABLE IF NOT EXISTS shedlock (
+  name VARCHAR(64),
+  lock_until TIMESTAMP(3) NULL,
+  locked_at TIMESTAMP(3) NULL,
+  locked_by VARCHAR(255),
+  PRIMARY KEY (name)
+);
