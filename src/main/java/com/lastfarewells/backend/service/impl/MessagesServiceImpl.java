@@ -45,7 +45,7 @@ public class MessagesServiceImpl implements MessagesService {
             messages.setDeliveryMethod(DeliveryMethodEnum.EMAIL);
         }
 
-        if (messagesDto.getRecipient() != null) {
+        if (messagesDto.getRecipient() != null && (messagesDto.getRecipient().getId() != null || messagesDto.getRecipient().getEmail() != null)) {
             Recipient recipient = messagesDto.getRecipient().getId() != null ?
                 recipientRepository.findById(messagesDto.getRecipient().getId()).orElseThrow(() -> new MessengesException("Invalid recipient"))
                 :
