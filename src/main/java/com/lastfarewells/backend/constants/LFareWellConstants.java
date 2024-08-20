@@ -22,6 +22,8 @@ public class LFareWellConstants {
 	public static final String MESSENGER = "messenger";
 	public static final String N_TH_VALUE = "nth_value";
 	public static final String STILL_MORE_VALUE = "still_more_value";
+	public static final String RECIPIENT = "recipient";
+	public static final String CONTENT = "content";
 
 	public static final String RECIPIENT_UPDATE_SUCCESS_MSG = "Record has been updated successfully.";
 	public static final String RECIPIENT_UPDATE_DELETE_MSG = "Record has been deleted successfully";
