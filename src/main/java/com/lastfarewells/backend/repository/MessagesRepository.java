@@ -1,5 +1,6 @@
 package com.lastfarewells.backend.repository;
 
+import com.lastfarewells.backend.entity.MessageStatusEnum;
 import com.lastfarewells.backend.entity.MessageTypeEnum;
 import com.lastfarewells.backend.entity.Messages;
 import java.util.Date;
@@ -12,6 +13,6 @@ public interface MessagesRepository extends JpaRepository<Messages, Long> {
 
     Page<Messages> findAllByUserIdAndMessageType(Long userId, MessageTypeEnum messageType, Pageable pageable);
 
-    List<Messages> findAllByDeliveryDate(Date deliveryDate);
+    List<Messages> findAllByDeliveryDateAndStatusNotIn(Date deliveryDate, List<MessageStatusEnum> status);
 
 }

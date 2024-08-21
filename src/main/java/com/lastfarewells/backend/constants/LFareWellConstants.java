@@ -14,6 +14,7 @@ public class LFareWellConstants {
 	public static final String MESSENGER_WELCOME_TEMPLATE = "messenger_welcome";
 	public static final String MESSENGER_ACCEPTANCE_SUBJECT = "Messenger Acceptance";
 	public static final String MESSENGER_ACCEPTANCE_TEMPLATE = "messenger_acceptance";
+	public static final String LAST_MESSAGE_TEMPLATE = "last_message";
 
 	public static final String USER_NAME = "userName";
 	public static final String TOKEN = "token";

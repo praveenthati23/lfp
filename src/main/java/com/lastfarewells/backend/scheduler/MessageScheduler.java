@@ -2,11 +2,13 @@ package com.lastfarewells.backend.scheduler;
 
 import com.lastfarewells.backend.constants.LFareWellConstants;
 import com.lastfarewells.backend.dto.EmailMessage;
+import com.lastfarewells.backend.entity.MessageStatusEnum;
 import com.lastfarewells.backend.entity.Messages;
 import com.lastfarewells.backend.entity.Users;
 import com.lastfarewells.backend.repository.MessagesRepository;
 import com.lastfarewells.backend.repository.UsersRepository;
 import com.lastfarewells.backend.service.EmailService;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -34,16 +36,23 @@ public class MessageScheduler {
     @Value("${spring.mail.from}")
     private String fromAddress;
 
-    //@Scheduled(cron = "0 0/15 * * * ?")
-    @Scheduled(fixedDelay = 10000)
-    @SchedulerLock(name = "MessageScheduler.sendScheduleMessages", lockAtLeastFor = "PT2H", lockAtMostFor = "PT5H")
+    @Scheduled(cron = "0 0 3,7,12 * * ?") // Running Daily at 3AM, 7AM, or 12PM
+    //@Scheduled(fixedDelay = 10000)
+    @SchedulerLock(name = "MessageScheduler.sendScheduleMessages", lockAtLeastFor = "PT2H", lockAtMostFor = "PT3H")
     @Transactional
     public void sendScheduleMessages() {
-        log.info("Scheduler for sending Messages : " + LocalDateTime.now());
+        log.info("Scheduler for sending Messages : {}", LocalDateTime.now());
 
-        List<Messages> todaysMessages = messagesRepository.findAllByDeliveryDate(new Date());
+        List<Messages> todaysMessages = messagesRepository.findAllByDeliveryDateAndStatusNotIn(new Date(),
+            List.of(MessageStatusEnum.DRAFT, MessageStatusEnum.DELIVERED));
+        log.info("Total Messages to be delivered : {}", todaysMessages.size());
         todaysMessages.forEach(message -> {
             messageBuilderAndSend(message);
+
+            message.setStatus(MessageStatusEnum.DELIVERED);
+            message.setUpdatedOn(Instant.now());
+            messagesRepository.save(message);
+            log.info("Message delivered for message id {}", message.getId());
         });
     }
 
@@ -78,7 +87,7 @@ public class MessageScheduler {
             sender.get().getFirstName() + (StringUtils.isNotEmpty(sender.get().getLastName()) ? " " + sender.get().getLastName() : ""));
         props.put(LFareWellConstants.CONTENT, StringUtils.isNotEmpty(message.getContent()) ? message.getContent() : "Message added as attachment");
 
-        EmailMessage emailMsg = new EmailMessage(fromAddress, toAddress, message.getTitle(), LFareWellConstants.MESSENGER_INVITATION_SUBJECT, props);
+        EmailMessage emailMsg = new EmailMessage(fromAddress, toAddress, message.getTitle(), LFareWellConstants.LAST_MESSAGE_TEMPLATE, props);
 
         emailService.sendEmail(emailMsg);
     }
