@@ -1,22 +1,6 @@
 package com.lastfarewells.backend.service.impl;
 
 
-import com.lastfarewells.backend.entity.Messenger;
-import com.lastfarewells.backend.exception.MessengerException;
-import com.lastfarewells.backend.repository.MessengerRepository;
-import java.time.Instant;
-import java.util.Map;
-import java.util.Optional;
-
-import org.apache.commons.collections4.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.keycloak.representations.AccessTokenResponse;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-
 import com.lastfarewells.backend.constants.LFareWellConstants;
 import com.lastfarewells.backend.dto.EmailMessage;
 import com.lastfarewells.backend.dto.LoginDto;
@@ -28,25 +12,25 @@ import com.lastfarewells.backend.dto.UpdateUserDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
 import com.lastfarewells.backend.dto.UserDetailsDto;
 import com.lastfarewells.backend.dto.VerifyEmailDto;
+import com.lastfarewells.backend.entity.LastMessageCount;
+import com.lastfarewells.backend.entity.Messenger;
 import com.lastfarewells.backend.entity.Users;
 import com.lastfarewells.backend.exception.UserAuthenticationException;
 import com.lastfarewells.backend.exception.UserException;
+import com.lastfarewells.backend.repository.MessagesRepository;
+import com.lastfarewells.backend.repository.MessengerRepository;
 import com.lastfarewells.backend.repository.UsersRepository;
 import com.lastfarewells.backend.service.EmailService;
 import com.lastfarewells.backend.service.IAMService;
 import com.lastfarewells.backend.service.UserService;
 import com.lastfarewells.backend.utils.JWTUtils;
-
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.keycloak.representations.AccessTokenResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,23 +44,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
 
-	private final UsersRepository usersRepository;
-	private final IAMService keycloakService;
-	private final ModelMapper modelMapper;
-	private final EmailService        emailService;
+    private final UsersRepository     usersRepository;
+    private final IAMService          keycloakService;
+    private final ModelMapper         modelMapper;
+    private final EmailService        emailService;
     private final MessengerRepository messengerRepository;
+    private final MessagesRepository  messagesRepository;
 
-	@Value("${spring.mail.from}")
-	private String fromAddress;
+    @Value("${spring.mail.from}")
+    private String fromAddress;
 
-	/*
-	 * @Override public Users registerUser(RegisterUserDto registerUserDto) {
-	 * log.info("Registering User with IAM id : {}", registerUserDto.getIamId());
-	 * Users users = Users.builder().firstName(registerUserDto.getFirstName())
-	 * .lastName(registerUserDto.getLastName()).iamId(registerUserDto.getIamId()).
-	 * birthDate(registerUserDto.getBirthDate()) .createdOn(Instant.now()).build();
-	 * return usersRepository.save(users); }
-	 */
+    /*
+     * @Override public Users registerUser(RegisterUserDto registerUserDto) {
+     * log.info("Registering User with IAM id : {}", registerUserDto.getIamId());
+     * Users users = Users.builder().firstName(registerUserDto.getFirstName())
+     * .lastName(registerUserDto.getLastName()).iamId(registerUserDto.getIamId()).
+     * birthDate(registerUserDto.getBirthDate()) .createdOn(Instant.now()).build();
+     * return usersRepository.save(users); }
+     */
     @Override
     @Transactional
     public void registerUser(SignupDto signupDto) {
@@ -100,8 +85,8 @@ public class UserServiceImpl implements UserService {
 
             if (signupDto.getIsMessenger()) {
                 // To check possession of invitation token
-                if (StringUtils.isEmpty(signupDto.getInvitationToken())){
-                   // usersRepository.delete(users);
+                if (StringUtils.isEmpty(signupDto.getInvitationToken())) {
+                    // usersRepository.delete(users);
                     keycloakService.deleteUser(iamId);
                     throw new UserException("User invitation token not found");
                 }
@@ -121,7 +106,6 @@ public class UserServiceImpl implements UserService {
             //TODO remove println as soon as mail sender is done
             //System.out.println("**** : " + token);
 
-
             EmailMessage emailMsg = getEmailMessagePojo(fromAddress, users.getEmail(),
                 LFareWellConstants.SIGN_UP_SUBJECT, LFareWellConstants.SIGN_UP_TEMPLATE,
                 users.getFirstName() + " " + users.getLastName(), token);
@@ -136,17 +120,16 @@ public class UserServiceImpl implements UserService {
             throw new UserException("User registration failed");
         }
 
-	}
-
-	private EmailMessage getEmailMessagePojo(String from, String to, String subject,
-			String templateName, String userName, String token) {
-		Map<String, Object> props  =new HashedMap<>();
-	    props.put(LFareWellConstants.USER_NAME, userName);
-	    props.put(LFareWellConstants.TOKEN, token);
-	    props.put(LFareWellConstants.SUBJECT, subject);
-	    return new EmailMessage(from,to,subject,templateName,props );
     }
 
+    private EmailMessage getEmailMessagePojo(String from, String to, String subject,
+        String templateName, String userName, String token) {
+        Map<String, Object> props = new HashedMap<>();
+        props.put(LFareWellConstants.USER_NAME, userName);
+        props.put(LFareWellConstants.TOKEN, token);
+        props.put(LFareWellConstants.SUBJECT, subject);
+        return new EmailMessage(from, to, subject, templateName, props);
+    }
 
 
     @Override
@@ -235,8 +218,10 @@ public class UserServiceImpl implements UserService {
         modelMapper.map(user, userDetailsDto);
         // TODO add user subscription details
         userDetailsDto.setSubscription(SubscriptionDto.builder().build());
-        // TODO add message count from DB
-        userDetailsDto.setMessagesCount(MessageCountDto.builder().letters(0L).videos(0L).audios(0L).build());
+        // add message count from DB
+        LastMessageCount lastMessageCount = messagesRepository.findMessageCountByUserId(userDetailsDto.getId());
+        userDetailsDto.setMessagesCount(MessageCountDto.builder().letters(Long.valueOf(lastMessageCount.getLetterCount()))
+            .videos(Long.valueOf(lastMessageCount.getVideoCount())).audios(Long.valueOf(lastMessageCount.getAudioCount())).build());
         return userDetailsDto;
     }
 
