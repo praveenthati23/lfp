@@ -67,7 +67,10 @@ public class MessagesServiceImpl implements MessagesService {
 
     @Override
     public Page<Messages> findAllMessages(PageRequest pageRequest, Long userId, MessageTypeEnum messageType) {
-        return messagesRepository.findAllByUserIdAndMessageType(userId, messageType, pageRequest);
+        if (messageType != null) {
+            return messagesRepository.findAllByUserIdAndMessageType(userId, messageType, pageRequest);
+        }
+        return messagesRepository.findAllByUserId(userId, pageRequest);
     }
 
     @Override

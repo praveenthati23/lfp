@@ -14,5 +14,6 @@ public interface MessagesRepository extends JpaRepository<Messages, Long> {
     Page<Messages> findAllByUserIdAndMessageType(Long userId, MessageTypeEnum messageType, Pageable pageable);
 
     List<Messages> findAllByDeliveryDateAndStatusNotIn(Date deliveryDate, List<MessageStatusEnum> status);
+    Page<Messages> findAllByUserId(Long userId, Pageable pageable);
 
 }

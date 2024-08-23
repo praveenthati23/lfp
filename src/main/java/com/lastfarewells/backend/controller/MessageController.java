@@ -35,7 +35,7 @@ public class MessageController {
 
     @GetMapping("/user/{userId}")
     public Page<Messages> findAllMessages(@PathVariable Long userId,
-        @RequestParam MessageTypeEnum messageType,
+        @RequestParam(required = false) MessageTypeEnum messageType,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size) {
         return messagesService.findAllMessages(PageRequest.of(page, size, Sort.by("id").descending()), userId, messageType);
