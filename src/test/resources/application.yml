@@ -1,9 +1,71 @@
 spring:
+  datasource:
+    username: ${POSTGRES_USERNAME:admin}
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/lastfarewells}
+    password: ${POSTGRES_PASSWORD:admin}
   jpa:
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: auto
         integration:
           envers:
             enabled: false
   profiles:
     active: test
+    
+  security:
+    oauth2:
+      resourceserver:
+          jwt:
+            issuer-uri: http://localhost:9090/realms/lastfarewells
+  
+  mail:
+    from: no-reply@shrisinfotech.com
+    default-encoding: UTF-8
+    host: email-smtp.us-east-1.amazonaws.com
+    username: <username>
+    password: <password>
+    port: 587
+    protocol: smtp 
+    test-connection: false
+    properties:
+      mail:
+        debug: true 
+        smtp:
+          auth: true
+          port: 25
+          starttls:
+            enable: true
+        transport:
+          protocol :smtp
+                  
+            
+storj:
+ bucketName : <bucketName>
+ accessKeyId : <accessKeyId>
+ secretKey : <secretekey>
+ region : <region>
+ endpointUrl : https://gateway.storjshare.io
+ upload.duration : 1
+ download.duration : 2
+
+keycloak:
+  auth-server-url: ${KEYCLOAK_URL:http://localhost:9090}
+  credentials:
+    secret: ${KEYCLOAK_SECRET:R0bxZRl1pRTK25W4CEd2Wb3Teanr1BEN}
+  realm: lastfarewells
+  bearer-only: true
+  use-resource-role-mappings: true
+  ssl-required: external
+  resource: lastfarewells-admin
+
+jwt:
+  secret-key: ${JWT_KEY:IrM8Cliyu7LLSo8rDIR4rMtnioM/8BEhftDNwx+zCeg49eBpGoTJELmkmNbRktag7YPQT9he21ti/1WWd55rPw==}
+   
+spotify:
+  client_id : <client_id>
+  client_secret: <client_secret>
+  redirect_uri: http://localhost:9061/core/spotify/callback
+  scope : user-read-private,user-read-email,playlist-modify-public,playlist-modify-private
+  tokenUrl :  https://accounts.spotify.com/api/token   

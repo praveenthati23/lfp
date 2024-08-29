@@ -64,3 +64,10 @@ keycloak:
 
 jwt:
   secret-key: ${JWT_KEY:IrM8Cliyu7LLSo8rDIR4rMtnioM/8BEhftDNwx+zCeg49eBpGoTJELmkmNbRktag7YPQT9he21ti/1WWd55rPw==}
+    
+spotify:
+  client_id : <client_id>
+  client_secret: <client_secret>
+  redirect_uri: http://localhost:9061/core/spotify/callback
+  scope : user-read-private,user-read-email,playlist-modify-public,playlist-modify-private
+  tokenUrl :  https://accounts.spotify.com/api/token  
