@@ -9,4 +9,8 @@ public interface MemorialService {
 
     Memorial getUserMemorial(Long userId);
 
+    Memorial updateMemorial(Long id, MemorialDto memorialDto);
+
+    void deleteMemorial(Long id);
+
 }

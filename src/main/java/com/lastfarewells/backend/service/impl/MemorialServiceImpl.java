@@ -2,13 +2,16 @@ package com.lastfarewells.backend.service.impl;
 
 import com.lastfarewells.backend.dto.MemorialDto;
 import com.lastfarewells.backend.entity.Memorial;
+import com.lastfarewells.backend.entity.Messages;
 import com.lastfarewells.backend.exception.MemorialException;
+import com.lastfarewells.backend.exception.MessengesException;
 import com.lastfarewells.backend.repository.MemorialRepository;
 import com.lastfarewells.backend.service.MemorialService;
 import java.time.Instant;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +43,28 @@ public class MemorialServiceImpl implements MemorialService {
     @Override
     public Memorial getUserMemorial(Long userId) {
         return memorialRepository.findByUserId(userId).orElseThrow(() -> new MemorialException("Memorial not found for user"));
+    }
+
+    @Override
+    public Memorial updateMemorial(Long id, MemorialDto memorialDto) {
+        Memorial memorial = memorialRepository.findById(id)
+            .orElseThrow(() -> new MessengesException("Memorial request not found"));
+        log.info("Updating Memorial {} for user {}", id, memorial.getUserId());
+
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        modelMapper.map(memorialDto, memorial);
+        memorial.setUserId(memorial.getUserId());
+        memorial.setUpdatedOn(Instant.now());
+
+        return memorialRepository.save(memorial);
+    }
+
+    @Override
+    public void deleteMemorial(Long id) {
+        Memorial memorial = memorialRepository.findById(id)
+            .orElseThrow(() -> new MessengesException("Memorial request not found"));
+        log.info("Deleting memorial with id : {}", id);
+        memorialRepository.deleteById(memorial.getId());
     }
 
 
