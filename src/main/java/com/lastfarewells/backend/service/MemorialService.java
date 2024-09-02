@@ -1,0 +1,12 @@
+package com.lastfarewells.backend.service;
+
+import com.lastfarewells.backend.dto.MemorialDto;
+import com.lastfarewells.backend.entity.Memorial;
+
+public interface MemorialService {
+
+    Memorial createMemorial(MemorialDto memorialDto);
+
+    Memorial getUserMemorial(Long userId);
+
+}

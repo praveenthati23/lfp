@@ -101,8 +101,8 @@ CREATE TABLE IF NOT EXISTS recipient (
 );
 
 CREATE TABLE IF NOT EXISTS Messages (
-	id serial PRIMARY KEY,
-	user_id INT NOT NULL,
+        id serial PRIMARY KEY,
+        user_id INT NOT NULL,
 	recipient_id INT,
 	messenger_id INT,
 	status VARCHAR ( 50 ),
@@ -128,4 +128,17 @@ CREATE TABLE IF NOT EXISTS shedlock (
   locked_at TIMESTAMP(3) NULL,
   locked_by VARCHAR(255),
   PRIMARY KEY (name)
+);
+
+CREATE TABLE IF NOT EXISTS memorial (
+  id serial PRIMARY KEY,
+  user_id INT NOT NULL,
+  background_image TEXT,
+  headshot TEXT,
+  epitaph TEXT,
+  obituary TEXT,
+  alias VARCHAR ( 255 ),
+  is_tribute_page BOOLEAN,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP
 );
