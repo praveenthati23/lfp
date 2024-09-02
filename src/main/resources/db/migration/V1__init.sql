@@ -142,3 +142,25 @@ CREATE TABLE IF NOT EXISTS memorial (
   created_on TIMESTAMP NOT NULL,
   updated_on TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS photos (
+  id serial PRIMARY KEY,
+  user_id INT NOT NULL,
+  filename VARCHAR ( 255 ),
+  alt_text VARCHAR ( 255 ),
+  caption VARCHAR ( 255 ),
+  order INT,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS playlists (
+  id serial PRIMARY KEY,
+  user_id INT NOT NULL,
+  name VARCHAR ( 255 ),
+  external_id VARCHAR ( 255 ),
+  image_url TEXT,
+  duration_ms BIGINT,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP
+);
