@@ -149,11 +149,13 @@ CREATE TABLE IF NOT EXISTS photos (
   filename VARCHAR ( 255 ),
   alt_text VARCHAR ( 255 ),
   caption VARCHAR ( 255 ),
-  order INT,
+  sort_order INT,
   created_on TIMESTAMP NOT NULL,
   updated_on TIMESTAMP
 );
 
+
+------- DO NOT USE YET ---------
 CREATE TABLE IF NOT EXISTS playlists (
   id serial PRIMARY KEY,
   user_id INT NOT NULL,
@@ -164,3 +166,4 @@ CREATE TABLE IF NOT EXISTS playlists (
   created_on TIMESTAMP NOT NULL,
   updated_on TIMESTAMP
 );
+--------------------------------
