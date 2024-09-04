@@ -102,7 +102,12 @@ public class MessagesServiceImpl implements MessagesService {
         }
         if (messagesDto.getRecipient() != null) {
             if (messagesDto.getRecipient().getId() == null) {
-                throw new MessengesException("Invalid recipient Id");
+                // save a new recipient
+                messages.setRecipient(recipientRepository.save(Recipient.builder()
+                    .userId(messagesDto.getUserId()).firstName(messagesDto.getRecipient().getFirstName())
+                    .lastName(messagesDto.getRecipient().getLastName())
+                    .email(messagesDto.getRecipient().getEmail()).createdOn(Instant.now())
+                    .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).build()));
             }
             Recipient recipient = messages.getRecipient();
             if (messages.getRecipient().getId().equals(messagesDto.getRecipient().getId())) {
