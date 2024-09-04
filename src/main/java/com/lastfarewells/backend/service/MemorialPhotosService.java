@@ -10,4 +10,8 @@ public interface MemorialPhotosService {
 
     List<MemorialPhotos> findAllMemorialPhotos(Long userId);
 
+    MemorialPhotos updateMemorialPhotos(Long id, MemorialPhotosDto memorialPhotosDto);
+
+    void deleteMemorialPhotos(Long id);
+
 }
