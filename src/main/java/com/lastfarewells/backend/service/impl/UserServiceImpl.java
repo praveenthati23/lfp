@@ -8,6 +8,11 @@ import com.lastfarewells.backend.dto.MessageCountDto;
 import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
 import com.lastfarewells.backend.dto.SubscriptionDto;
+import com.lastfarewells.backend.dto.SubscriptionDto.AudioSettings;
+import com.lastfarewells.backend.dto.SubscriptionDto.Feature;
+import com.lastfarewells.backend.dto.SubscriptionDto.MediaData;
+import com.lastfarewells.backend.dto.SubscriptionDto.Plan;
+import com.lastfarewells.backend.dto.SubscriptionDto.VideoSettings;
 import com.lastfarewells.backend.dto.UpdateUserDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
 import com.lastfarewells.backend.dto.UserDetailsDto;
@@ -25,6 +30,7 @@ import com.lastfarewells.backend.service.IAMService;
 import com.lastfarewells.backend.service.UserService;
 import com.lastfarewells.backend.utils.JWTUtils;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -217,7 +223,17 @@ public class UserServiceImpl implements UserService {
         UserDetailsDto userDetailsDto = UserDetailsDto.builder().build();
         modelMapper.map(user, userDetailsDto);
         // TODO add user subscription details
-        userDetailsDto.setSubscription(SubscriptionDto.builder().build());
+        userDetailsDto.setSubscription(SubscriptionDto.builder()
+                .subscriptionId(1L).name("Freemium")
+                .feature(List.of(Feature.builder().id(1L).name("last_letters").build(), Feature.builder().id(2L).name("last_videos").build(),
+                    Feature.builder().id(3L).name("last_audios").build(), Feature.builder().id(4L).name("messengers").build(),
+                    Feature.builder().id(5L).name("memorial_page").build(), Feature.builder().id(6L).name("photos")
+                        .build()))
+            .plan(Plan.builder().id(1).photos(MediaData.builder().dataCountLimit(-1).uploadSizeLimit(5).build())
+                .lastAudios(AudioSettings.builder().lengthLimit(3).dataCountLimit(3).uploadSizeLimit(25).build())
+                .lastVideos(VideoSettings.builder().lengthLimit(2).dataCountLimit(3).uploadSizeLimit(50).build())
+                .lastLetters(MediaData.builder().uploadSizeLimit(5).dataCountLimit(3).build()).build())
+            .build());
         // add message count from DB
         LastMessageCount lastMessageCount = messagesRepository.findMessageCountByUserId(userDetailsDto.getId());
         userDetailsDto.setMessagesCount(MessageCountDto.builder().letters(Long.valueOf(lastMessageCount.getLetterCount()))

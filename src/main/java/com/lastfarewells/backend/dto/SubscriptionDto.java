@@ -1,6 +1,7 @@
 package com.lastfarewells.backend.dto;
 
 import java.time.Instant;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +18,45 @@ public class SubscriptionDto {
     private Instant createdOn;
     private Instant updatedOn;
 
+    private List<Feature> feature;
+
+    private Plan plan;
+
+    @Data
+    @Builder
+    public static class Feature {
+        private Long id;
+        private String name;
+    }
+
+    @Data
+    @Builder
+    public static class Plan {
+        private int id;
+        private MediaData photos;
+        private AudioSettings lastAudios;
+        private VideoSettings lastVideos;
+        private MediaData lastLetters;
+    }
+    @Data
+    @Builder
+    public static class MediaData {
+        private int dataCountLimit;
+        private int uploadSizeLimit;
+    }
+    @Data
+    @Builder
+    public static class AudioSettings {
+        private int lengthLimit;
+        private int dataCountLimit;
+        private int uploadSizeLimit;
+    }
+
+    @Data
+    @Builder
+    public static class VideoSettings {
+        private int lengthLimit;
+        private int dataCountLimit;
+        private int uploadSizeLimit;
+    }
 }
