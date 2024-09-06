@@ -59,6 +59,9 @@ public class UserServiceImpl implements UserService {
 
     @Value("${spring.mail.from}")
     private String fromAddress;
+    
+    @Value("${app.url}")
+    private String appUrl;
 
     /*
      * @Override public Users registerUser(RegisterUserDto registerUserDto) {
@@ -134,6 +137,7 @@ public class UserServiceImpl implements UserService {
         props.put(LFareWellConstants.USER_NAME, userName);
         props.put(LFareWellConstants.TOKEN, token);
         props.put(LFareWellConstants.SUBJECT, subject);
+        props.put(LFareWellConstants.UI_URL, appUrl);
         return new EmailMessage(from, to, subject, templateName, props);
     }
 
