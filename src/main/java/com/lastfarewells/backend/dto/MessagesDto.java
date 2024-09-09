@@ -1,6 +1,7 @@
 package com.lastfarewells.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lastfarewells.backend.entity.DeliveryMethodEnum;
 import com.lastfarewells.backend.entity.MessageStatusEnum;
 import com.lastfarewells.backend.entity.MessageTypeEnum;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MessagesDto {
 
     @NotNull(message = "userId cannot be null")
