@@ -18,7 +18,7 @@ public class SubscriptionDto {
     private Instant createdOn;
     private Instant updatedOn;
 
-    private List<FeatureDto> feature;
+    private List<FeatureDto> features;
 
     private PlanDto plan;
 

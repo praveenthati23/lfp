@@ -229,7 +229,7 @@ public class UserServiceImpl implements UserService {
         // TODO add user subscription details
         userDetailsDto.setSubscription(SubscriptionDto.builder()
                 .subscriptionId(1L).name("Freemium")
-                .feature(List.of(FeatureDto.builder().id(1L).name("last_letters").build(), FeatureDto.builder().id(2L).name("last_videos").build(),
+                .features(List.of(FeatureDto.builder().id(1L).name("last_letters").build(), FeatureDto.builder().id(2L).name("last_videos").build(),
                     FeatureDto.builder().id(3L).name("last_audios").build(), FeatureDto.builder().id(4L).name("messengers").build(),
                     FeatureDto.builder().id(5L).name("memorial_page").build(), FeatureDto.builder().id(6L).name("photos")
                         .build()))
