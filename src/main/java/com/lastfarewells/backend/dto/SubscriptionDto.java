@@ -18,20 +18,20 @@ public class SubscriptionDto {
     private Instant createdOn;
     private Instant updatedOn;
 
-    private List<Feature> feature;
+    private List<FeatureDto> feature;
 
-    private Plan plan;
+    private PlanDto plan;
 
     @Data
     @Builder
-    public static class Feature {
+    public static class FeatureDto {
         private Long id;
         private String name;
     }
 
     @Data
     @Builder
-    public static class Plan {
+    public static class PlanDto {
         private int id;
         private MediaData photos;
         private AudioSettings lastAudios;

@@ -155,6 +155,63 @@ CREATE TABLE IF NOT EXISTS photos (
 );
 
 
+CREATE TABLE IF NOT EXISTS subscription (
+  id serial PRIMARY KEY,
+  name VARCHAR ( 255 )  NOT NULL,
+  payment_id INT,
+  plan_id  INT  NOT NULL,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP
+);
+
+INSERT INTO subscription(name, payment_id, plan_id, created_on) VALUES ('Freemium', 0, 1, CURRENT_TIMESTAMP);
+INSERT INTO subscription(name, payment_id, plan_id, created_on) VALUES ('Legacy Edition', 2, 2, CURRENT_TIMESTAMP);
+
+CREATE TABLE IF NOT EXISTS plan (
+  id serial PRIMARY KEY,
+  name VARCHAR ( 255 )  NOT NULL,
+  extras JSONB,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP
+);
+
+INSERT INTO plan(name, extras, created_on) VALUES ('Freemium', '{"photos":{"data_count_limit":-1,"upload_size_limit":5},"last_audios":{"length_limit":3,"data_count_limit":3,"upload_size_limit":25},"last_videos":{"length_limit":2,"data_count_limit":3,"upload_size_limit":50},"last_letters":{"data_count_limit":3,"upload_size_limit":5},"memorial_page":{"headshot":{"upload_size_limit":-1},"cover_photo":{"upload_size_limit":-1}}}', CURRENT_TIMESTAMP);
+INSERT INTO plan(name, extras, created_on) VALUES ('Legacy Edition', '{"photos":{"data_count_limit":-1,"upload_size_limit":5},"last_audios":{"length_limit":10,"data_count_limit":10,"upload_size_limit":25},"last_videos":{"length_limit":10,"data_count_limit":10,"upload_size_limit":50},"last_letters":{"data_count_limit":-1,"upload_size_limit":5},"memorial_page":{"headshot":{"upload_size_limit":-1},"cover_photo":{"upload_size_limit":-1}}}', CURRENT_TIMESTAMP);
+
+
+CREATE TABLE IF NOT EXISTS feature (
+  id serial PRIMARY KEY,
+  name VARCHAR ( 255 )  NOT NULL,
+  extras JSONB,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP
+);
+
+INSERT INTO feature(name, extras, created_on) VALUES ('last_letters',null,CURRENT_TIMESTAMP);
+INSERT INTO feature(name, extras, created_on) VALUES ('last_videos',null,CURRENT_TIMESTAMP);
+INSERT INTO feature(name, extras, created_on) VALUES ('last_audios',null,CURRENT_TIMESTAMP);
+INSERT INTO feature(name, extras, created_on) VALUES ('messengers',null,CURRENT_TIMESTAMP);
+INSERT INTO feature(name, extras, created_on) VALUES ('memorial_page',null,CURRENT_TIMESTAMP);
+INSERT INTO feature(name, extras, created_on) VALUES ('photos',null,CURRENT_TIMESTAMP);
+
+CREATE TABLE IF NOT EXISTS plan_feature (
+  plan_id INT NOT NULL,
+  feature_id INT NOT NULL
+);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (1,1);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (1,2);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (1,3);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (1,4);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (1,5);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (1,6);
+
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,1);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,2);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,3);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,4);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,5);
+INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,6);
+
 ------- DO NOT USE YET ---------
 CREATE TABLE IF NOT EXISTS playlists (
   id serial PRIMARY KEY,
@@ -167,3 +224,4 @@ CREATE TABLE IF NOT EXISTS playlists (
   updated_on TIMESTAMP
 );
 --------------------------------
+
