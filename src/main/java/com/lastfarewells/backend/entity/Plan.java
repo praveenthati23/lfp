@@ -28,7 +28,7 @@ public class Plan {
     private String name;
 
     @Column(name = "extras", columnDefinition = "jsonb")
-    private Map<String, Object> extras;
+    private String extras;
 
 
     @Column(name = "created_on")

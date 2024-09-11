@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
-    @ExceptionHandler({UserException.class, MessengerException.class, MessengesException.class, MemorialException.class})
+    @ExceptionHandler({UserException.class, MessengerException.class, MessengesException.class, MemorialException.class, SubscriptionException.class})
     public ResponseEntity<ErrorResponse> handleCoreException(
         Exception e
     ) {
