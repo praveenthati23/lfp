@@ -16,6 +16,7 @@ import com.lastfarewells.backend.service.MessagesService;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,12 @@ public class MessagesServiceImpl implements MessagesService {
             .deliverOnDeath(messagesDto.getDeliverOnDeath()).deliveryMethod(messagesDto.getDeliveryMethod())
             .eventTitle(messagesDto.getEventTitle())
             .scheduleType(messagesDto.getScheduleType()).deliveryDate(messagesDto.getDeliveryDate()).build();
-        messages.setStatus(MessageStatusEnum.COMPLETED);
+        if (messagesDto.getStatus() != null) {
+            messages.setStatus(messagesDto.getStatus());
+        } else {
+            messages.setStatus(MessageStatusEnum.COMPLETED);
+        }
+
         if (messages.getDeliveryMethod() == null) {
             messages.setDeliveryMethod(DeliveryMethodEnum.EMAIL);
         }
@@ -111,10 +117,19 @@ public class MessagesServiceImpl implements MessagesService {
             }
             Recipient recipient = messages.getRecipient();
             if (messages.getRecipient().getId().equals(messagesDto.getRecipient().getId())) {
-                recipient.setFirstName(messagesDto.getRecipient().getFirstName());
-                recipient.setLastName(messagesDto.getRecipient().getLastName());
-                recipient.setEmail(messagesDto.getRecipient().getEmail());
-                recipient.setIsUserRecipient(messagesDto.getRecipient().getIsUserRecipient());
+                if (StringUtils.isNotEmpty(messagesDto.getRecipient().getFirstName())) {
+                    recipient.setFirstName(messagesDto.getRecipient().getFirstName());
+                }
+                if (StringUtils.isNotEmpty(messagesDto.getRecipient().getLastName())) {
+                    recipient.setLastName(messagesDto.getRecipient().getLastName());
+                }
+                if (StringUtils.isNotEmpty(messagesDto.getRecipient().getEmail())) {
+                    recipient.setEmail(messagesDto.getRecipient().getEmail());
+                }
+                if (messagesDto.getRecipient().getIsUserRecipient() != null) {
+                    recipient.setIsUserRecipient(messagesDto.getRecipient().getIsUserRecipient());
+                }
+
                 recipient.setUpdatedOn(Instant.now());
                 messages.setRecipient(recipientRepository.save(recipient));
             } else {
