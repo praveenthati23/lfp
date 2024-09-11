@@ -68,6 +68,7 @@ public class MessagesServiceImpl implements MessagesService {
             messages.setMessenger(messenger);
         }
         messages.setCreatedOn(Instant.now());
+        messages.setUpdatedOn(Instant.now());
         return messagesRepository.save(messages);
     }
 
