@@ -1,12 +1,10 @@
 package com.lastfarewells.backend.service;
 
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -20,6 +18,8 @@ import com.lastfarewells.backend.repository.UsersRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -37,44 +37,42 @@ public class StorjAWSService {
 
 	@Value("${storj.upload.duration}")
 	private String presignedUrlUploadDuration;
-	
+
 	@Value("${storj.download.duration}")
 	private String presignedUrlDownlodDuration;
 
-
 	private final UsersRepository usersRepo;
 	private final S3Presigner presigner;
+	private final PresignedUrlService presignedUrlService;
+	private final S3Client s3Client;
 
-	@Autowired
-	private PresignedUrlService presignedUrlService;
-
-	public presigUrlUploadResult getUploadUrl(PresignedUrl presingedUrl) throws Exception{
+	public presigUrlUploadResult getUploadUrl(PresignedUrl presingedUrl) throws Exception {
 		log.info("call to getUploadUrl");
 		presigUrlUploadResult result = new presigUrlUploadResult();
-		
+
 		JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext()
 				.getAuthentication();
 		String userEmail = authentication.getTokenAttributes().get("email").toString();
 		Users user = usersRepo.findByEmail(userEmail).get();
 		Date date = new Date();
-		String fileName ="";
-		fileName = user.getId() + "-"+date.getTime() +"-"+UUID.randomUUID()+"."+presingedUrl.getExtension();
-		
-		log.info("getUploadUrl: fileName: "+fileName);
-		String objectKey = presingedUrl.getDirectory()  +"/" + fileName;
-		presingedUrl.setKey("/"+objectKey);
+		String fileName = "";
+		fileName = user.getId() + "-" + date.getTime() + "-" + UUID.randomUUID() + "." + presingedUrl.getExtension();
+
+		log.info("getUploadUrl: fileName: " + fileName);
+		String objectKey = presingedUrl.getDirectory() + "/" + fileName;
+		presingedUrl.setKey("/" + objectKey);
 		presingedUrl.setCreatedAt(Instant.now());
 		presingedUrl.setModifiedAt(Instant.now());
-		
+
 		presignedUrlService.save(presingedUrl);
-		result.setUploadUrl(generateUploadPresignedurl(objectKey,presingedUrl.getFileType()));
+		result.setUploadUrl(generateUploadPresignedurl(objectKey, presingedUrl.getFileType()));
 		result.setKey(fileName);
 		return result;
 
 	}
-	
-	public String generateUploadPresignedurl(String objectKey,String contentType) {
-		log.info("generateUploadPresignedurl: objectKey: "+objectKey);
+
+	public String generateUploadPresignedurl(String objectKey, String contentType) {
+		log.info("generateUploadPresignedurl: objectKey: " + objectKey);
 		PutObjectRequest objectRequest = PutObjectRequest.builder().bucket(bucketName).key(objectKey)
 				.contentType(contentType).build();
 
@@ -84,26 +82,35 @@ public class StorjAWSService {
 
 		PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(presignRequest);
 		return presignedRequest.url().toString();
-		
+
 	}
 
 	public presigUrlDownloadResult getDownloadUrl(String key) {
-		log.info("getDownloadUrl: key: "+key);
-		presigUrlDownloadResult  result = new presigUrlDownloadResult();
+		log.info("getDownloadUrl: key: " + key);
+		presigUrlDownloadResult result = new presigUrlDownloadResult();
 		result.setMetadata(presignedUrlService.findByKey(key));
-		String url =  generateDownloadPresignedUrl(key);
+		String url = generateDownloadPresignedUrl(key);
 		result.setUrl(url);
 		return result;
 	}
-	
+
 	public String generateDownloadPresignedUrl(String key) {
-		log.info("call to generateDownloadPresignedUrl: "+key);
+		log.info("call to generateDownloadPresignedUrl: " + key);
 		GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(key).build();
 		GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder().getObjectRequest(getObjectRequest)
 				.signatureDuration(Duration.ofMinutes(Integer.parseInt(presignedUrlDownlodDuration))).build();
 		String presignedUrl = presigner.presignGetObject(presignRequest).url().toString();
-		log.info("presignedUrl: "+presignedUrl);
+		log.info("presignedUrl: " + presignedUrl);
 		return presignedUrl;
+	}
+
+	public String deleteFile(String fileName) {
+		DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucketName).key(fileName)
+				.build();
+
+		s3Client.deleteObject(deleteObjectRequest);
+		log.info("File deleted successfully: " + fileName);
+		return "File deleted successfully";
 	}
 
 }
