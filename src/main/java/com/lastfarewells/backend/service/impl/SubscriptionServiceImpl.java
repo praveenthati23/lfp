@@ -2,6 +2,7 @@ package com.lastfarewells.backend.service.impl;
 
 import com.lastfarewells.backend.dto.SubscriptionDto;
 import com.lastfarewells.backend.dto.SubscriptionDto.FeatureDto;
+import com.lastfarewells.backend.dto.SubscriptionDto.PlanDto;
 import com.lastfarewells.backend.entity.Feature;
 import com.lastfarewells.backend.entity.Subscription;
 import com.lastfarewells.backend.exception.SubscriptionException;
@@ -28,7 +29,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             .orElseThrow(() -> new SubscriptionException("Subscription not found"));
         SubscriptionDto subscriptionDto = SubscriptionDto.builder().subscriptionId(subscription.getId()).name(subscription.getName())
             .createdOn(subscription.getCreatedOn()).updatedOn(subscription.getUpdatedOn()).build();
-
+       // PlanDto planDto = PlanDto.builder().id(subscription.getPlan().getId()).build();
         List<Feature> features = featureRepository.findFeaturesByPlanId(subscription.getPlan().getId());
         subscriptionDto.setFeatures(features.stream().map(f -> FeatureDto.builder().id(f.getId()).name(f.getName()).build()).collect(Collectors.toList()));
         System.out.println(subscription);
