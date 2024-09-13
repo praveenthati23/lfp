@@ -27,6 +27,7 @@ import com.lastfarewells.backend.repository.MessengerRepository;
 import com.lastfarewells.backend.repository.UsersRepository;
 import com.lastfarewells.backend.service.EmailService;
 import com.lastfarewells.backend.service.IAMService;
+import com.lastfarewells.backend.service.SubscriptionService;
 import com.lastfarewells.backend.service.UserService;
 import com.lastfarewells.backend.utils.JWTUtils;
 import java.time.Instant;
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
     private final EmailService        emailService;
     private final MessengerRepository messengerRepository;
     private final MessagesRepository  messagesRepository;
+    private final SubscriptionService subscriptionService;
 
     @Value("${spring.mail.from}")
     private String fromAddress;
@@ -226,18 +228,23 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new UserException("User Not Found"));
         UserDetailsDto userDetailsDto = UserDetailsDto.builder().build();
         modelMapper.map(user, userDetailsDto);
-        // TODO add user subscription details
-        userDetailsDto.setSubscription(SubscriptionDto.builder()
+
+        if (user.getSubscriptionId() == null) {
+            userDetailsDto.setSubscription(SubscriptionDto.builder()
                 .subscriptionId(1L).name("Freemium")
                 .features(List.of(FeatureDto.builder().id(1L).name("last_letters").build(), FeatureDto.builder().id(2L).name("last_videos").build(),
                     FeatureDto.builder().id(3L).name("last_audios").build(), FeatureDto.builder().id(4L).name("messengers").build(),
                     FeatureDto.builder().id(5L).name("memorial_page").build(), FeatureDto.builder().id(6L).name("photos")
                         .build()))
-            .plan(PlanDto.builder().id(1).photos(MediaData.builder().dataCountLimit(-1).uploadSizeLimit(5).build())
-                .lastAudios(AudioSettings.builder().lengthLimit(3).dataCountLimit(3).uploadSizeLimit(25).build())
-                .lastVideos(VideoSettings.builder().lengthLimit(2).dataCountLimit(3).uploadSizeLimit(50).build())
-                .lastLetters(MediaData.builder().uploadSizeLimit(5).dataCountLimit(3).build()).build())
-            .build());
+                .plan(PlanDto.builder().id(1L).photos(MediaData.builder().dataCountLimit(-1).uploadSizeLimit(5).build())
+                    .lastAudios(AudioSettings.builder().lengthLimit(3).dataCountLimit(3).uploadSizeLimit(25).build())
+                    .lastVideos(VideoSettings.builder().lengthLimit(2).dataCountLimit(3).uploadSizeLimit(50).build())
+                    .lastLetters(MediaData.builder().uploadSizeLimit(5).dataCountLimit(3).build()).build())
+                .build());
+        } else {
+            userDetailsDto.setSubscription(subscriptionService.fetchSubscriptionDetails(user.getSubscriptionId()));
+        }
+
         // add message count from DB
         LastMessageCount lastMessageCount = messagesRepository.findMessageCountByUserId(userDetailsDto.getId());
         userDetailsDto.setMessagesCount(MessageCountDto.builder().letters(Long.valueOf(lastMessageCount.getLetterCount()))

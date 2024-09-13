@@ -18,8 +18,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "Users")
@@ -103,5 +101,8 @@ public class Users {
     private Instant lastLogin;
     @Column(name = "role_id")
     private Integer roleId;
+
+    @Column(name = "subscription_id")
+    private Long subscriptionId;
 
 }

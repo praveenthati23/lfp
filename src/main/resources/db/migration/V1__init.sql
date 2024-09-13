@@ -175,8 +175,8 @@ CREATE TABLE IF NOT EXISTS plan (
   updated_on TIMESTAMP
 );
 
-INSERT INTO plan(name, extras, created_on) VALUES ('Freemium', '{"photos":{"data_count_limit":-1,"upload_size_limit":5},"last_audios":{"length_limit":3,"data_count_limit":3,"upload_size_limit":25},"last_videos":{"length_limit":2,"data_count_limit":3,"upload_size_limit":50},"last_letters":{"data_count_limit":3,"upload_size_limit":5},"memorial_page":{"headshot":{"upload_size_limit":-1},"cover_photo":{"upload_size_limit":-1}}}', CURRENT_TIMESTAMP);
-INSERT INTO plan(name, extras, created_on) VALUES ('Legacy Edition', '{"photos":{"data_count_limit":-1,"upload_size_limit":5},"last_audios":{"length_limit":10,"data_count_limit":10,"upload_size_limit":25},"last_videos":{"length_limit":10,"data_count_limit":10,"upload_size_limit":50},"last_letters":{"data_count_limit":-1,"upload_size_limit":5},"memorial_page":{"headshot":{"upload_size_limit":-1},"cover_photo":{"upload_size_limit":-1}}}', CURRENT_TIMESTAMP);
+INSERT INTO plan(name, extras, created_on) VALUES ('Freemium', '{"photos":{"dataCountLimit":-1,"uploadSizeLimit":5},"lastAudios":{"lengthLimit":3,"dataCountLimit":3,"uploadSizeLimit":25},"lastVideos":{"lengthLimit":2,"dataCountLimit":3,"uploadSizeLimit":50},"lastLetters":{"dataCountLimit":3,"uploadSizeLimit":5},"memorialPage":{"headshot":{"uploadSizeLimit":-1},"coverPhoto":{"uploadSizeLimit":-1}}}', CURRENT_TIMESTAMP);
+INSERT INTO plan(name, extras, created_on) VALUES ('Legacy Edition', '{"photos":{"dataCountLimit":-1,"uploadSizeLimit":5},"lastAudios":{"lengthLimit":10,"dataCountLimit":10,"uploadSizeLimit":25},"lastVideos":{"lengthLimit":10,"dataCountLimit":10,"uploadSizeLimit":50},"lastLetters":{"dataCountLimit":-1,"uploadSizeLimit":5},"memorialPage":{"headshot":{"uploadSizeLimit":-1},"coverPhoto":{"uploadSizeLimit":-1}}}', CURRENT_TIMESTAMP);
 
 
 CREATE TABLE IF NOT EXISTS feature (
@@ -211,6 +211,10 @@ INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,3);
 INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,4);
 INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,5);
 INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,6);
+
+
+ALTER TABLE Users
+ADD COLUMN subscription_id INT DEFAULT 1;
 
 ------- DO NOT USE YET ---------
 CREATE TABLE IF NOT EXISTS playlists (

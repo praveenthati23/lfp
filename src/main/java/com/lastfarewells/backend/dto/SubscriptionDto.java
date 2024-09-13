@@ -32,11 +32,17 @@ public class SubscriptionDto {
     @Data
     @Builder
     public static class PlanDto {
-        private int id;
-        private MediaData photos;
+        private Long id;
+       /* private MediaData photos;
         private AudioSettings lastAudios;
         private VideoSettings lastVideos;
-        private MediaData lastLetters;
+        private MediaData lastLetters;*/
+
+        private Object photos;
+        private Object lastAudios;
+        private Object lastVideos;
+        private Object memorialPage;
+        private Object lastLetters;
     }
     @Data
     @Builder
