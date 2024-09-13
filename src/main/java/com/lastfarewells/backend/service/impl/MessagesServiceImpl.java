@@ -61,6 +61,12 @@ public class MessagesServiceImpl implements MessagesService {
                         .email(messagesDto.getRecipient().getEmail()).createdOn(Instant.now())
                         .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).build();
             messages.setRecipient(recipientRepository.save(recipient));
+        } else if (messagesDto.getRecipient() != null) {
+            messages.setRecipient(recipientRepository.save(Recipient.builder()
+                .userId(messagesDto.getUserId()).firstName(messagesDto.getRecipient().getFirstName())
+                .lastName(messagesDto.getRecipient().getLastName())
+                .email(messagesDto.getRecipient().getEmail()).createdOn(Instant.now())
+                .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).build()));
         }
         if (messagesDto.getMessenger() != null) {
             Messenger messenger = messengerRepository.findById(messagesDto.getMessenger())

@@ -216,6 +216,9 @@ INSERT INTO plan_feature(plan_id,feature_id) VALUES (2,6);
 ALTER TABLE Users
 ADD COLUMN subscription_id INT DEFAULT 1;
 
+
+ALTER TABLE recipient ALTER COLUMN email DROP NOT NULL;
+
 ------- DO NOT USE YET ---------
 CREATE TABLE IF NOT EXISTS playlists (
   id serial PRIMARY KEY,
