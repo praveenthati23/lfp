@@ -73,4 +73,11 @@ spotify:
   tokenUrl :  https://accounts.spotify.com/api/token
   
 app:
-  url: http://52.4.2.154/  
+ url: https://lastfarewellsapp.com/   
+ 
+sqs:     
+ accesskey: <accesskey>
+ secretkey: <secretekey>
+ queueName: lf_email_fail_queue
+ region: us-east-1  
+ 
