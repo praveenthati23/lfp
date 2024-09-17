@@ -21,10 +21,10 @@ public class SqsConfig {
 	@Value("${sqs.region}")
 	private String region;
 
-	@Bean
+	/*@Bean
 	public SqsAsyncClient sqsAsyncClient() {
 		return SqsAsyncClient.builder().region(Region.of(region))
 				.credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
 				.build();
-	}
+	}*/
 }

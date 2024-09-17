@@ -219,6 +219,16 @@ ADD COLUMN subscription_id INT DEFAULT 1;
 
 ALTER TABLE recipient ALTER COLUMN email DROP NOT NULL;
 
+
+CREATE TABLE IF NOT EXISTS payment_link (
+  id serial PRIMARY KEY,
+  user_id INT NOT NULL,
+  payment_link TEXT,
+  payment_intent TEXT,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP
+);
+
 ------- DO NOT USE YET ---------
 CREATE TABLE IF NOT EXISTS playlists (
   id serial PRIMARY KEY,
