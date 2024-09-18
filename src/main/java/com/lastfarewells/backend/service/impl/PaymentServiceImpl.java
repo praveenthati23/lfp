@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentLink createPaymentLink(PaymentLinkDto paymentLinkDto) {
+        if (paymentLinkDto.getUserId() == null) {
+            throw new PaymentException("UserId is mandatory");
+        }
         Optional<PaymentLink> existingPaymentLink = paymentLinkRepository.findByUserId(paymentLinkDto.getUserId());
         if (existingPaymentLink.isPresent()) {
             existingPaymentLink.get().setPaymentLink(paymentLinkDto.getPaymentLink());
@@ -44,7 +48,18 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentLink updatePaymentLink(PaymentLinkDto paymentLinkDto) {
-        return null;
+        if (paymentLinkDto.getUserId() == null) {
+            throw new PaymentException("UserId is mandatory");
+        }
+        PaymentLink paymentLink = paymentLinkRepository.findByUserId(paymentLinkDto.getUserId())
+            .orElseThrow(() -> new PaymentException("Payment Link not found"));
+        if (StringUtils.isNotEmpty(paymentLinkDto.getPaymentLink())) {
+            paymentLink.setPaymentLink(paymentLinkDto.getPaymentLink());
+        }
+        if (StringUtils.isNotEmpty(paymentLinkDto.getPaymentIntent())) {
+            paymentLink.setPaymentLink(paymentLinkDto.getPaymentIntent());
+        }
+        return paymentLinkRepository.save(paymentLink);
     }
 
 
