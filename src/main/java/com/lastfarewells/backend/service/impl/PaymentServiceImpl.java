@@ -2,6 +2,7 @@ package com.lastfarewells.backend.service.impl;
 
 import com.lastfarewells.backend.dto.PaymentLinkDto;
 import com.lastfarewells.backend.entity.PaymentLink;
+import com.lastfarewells.backend.exception.PaymentException;
 import com.lastfarewells.backend.repository.PaymentLinkRepository;
 import com.lastfarewells.backend.service.PaymentService;
 import java.time.Instant;
@@ -34,5 +35,17 @@ public class PaymentServiceImpl implements PaymentService {
             return paymentLinkRepository.save(paymentLink);
         }
     }
+
+    @Override
+    public PaymentLink findPaymentLink(Long userId) {
+        return paymentLinkRepository.findByUserId(userId)
+            .orElseThrow(() -> new PaymentException("Payment Link not found"));
+    }
+
+    @Override
+    public PaymentLink updatePaymentLink(PaymentLinkDto paymentLinkDto) {
+        return null;
+    }
+
 
 }

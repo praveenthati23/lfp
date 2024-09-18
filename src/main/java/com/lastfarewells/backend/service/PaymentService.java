@@ -7,4 +7,8 @@ public interface PaymentService {
 
     PaymentLink createPaymentLink(PaymentLinkDto paymentLinkDto);
 
+    PaymentLink findPaymentLink(Long userId);
+
+    PaymentLink updatePaymentLink(PaymentLinkDto paymentLinkDto);
+
 }
