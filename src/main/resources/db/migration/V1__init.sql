@@ -229,6 +229,17 @@ CREATE TABLE IF NOT EXISTS payment_link (
   updated_on TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS payment (
+  id serial PRIMARY KEY,
+  user_id INT NOT NULL,
+  transaction_id TEXT,
+  amount numeric(38,2),
+  checkout_id TEXT,
+  payment_intent TEXT,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP
+);
+
 ------- DO NOT USE YET ---------
 CREATE TABLE IF NOT EXISTS playlists (
   id serial PRIMARY KEY,

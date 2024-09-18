@@ -1,9 +1,11 @@
 package com.lastfarewells.backend.config;
 
 import com.lastfarewells.backend.dto.AddressDto;
+import com.lastfarewells.backend.dto.PaymentDto;
 import com.lastfarewells.backend.dto.UpdateUserDto;
 import com.lastfarewells.backend.dto.UserDetailsDto;
 import com.lastfarewells.backend.entity.Address;
+import com.lastfarewells.backend.entity.Payment;
 import com.lastfarewells.backend.entity.Users;
 import org.modelmapper.Condition;
 import org.modelmapper.Conditions;
@@ -69,6 +71,21 @@ public class ModelMapperConfig {
             protected void configure() {
                 skip().setMessagesCount(null);
                 skip().setSubscription(null);
+            }
+        });
+
+        // custom mapping for payment
+        modelMapper.addMappings(new PropertyMap<PaymentDto, Payment>() {
+            @Override
+            protected void configure() {
+                Condition<?, ?> notNull = Conditions.isNotNull();
+
+                when(notNull).map().setUserId(source.getUserId());
+                when(notNull).map().setTransactionId(source.getTransactionId());
+                when(notNull).map().setAmount(source.getAmount());
+                when(notNull).map().setCheckoutId(source.getCheckoutId());
+                when(notNull).map().setPaymentIntent(source.getPaymentIntent());
+                skip().setId(null);
             }
         });
 
