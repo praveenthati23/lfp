@@ -24,20 +24,20 @@ public class PaymentServiceImpl implements PaymentService {
         if (paymentLinkDto.getUserId() == null) {
             throw new PaymentException("UserId is mandatory");
         }
-        Optional<PaymentLink> existingPaymentLink = paymentLinkRepository.findByUserId(paymentLinkDto.getUserId());
+       /* Optional<PaymentLink> existingPaymentLink = paymentLinkRepository.findByUserId(paymentLinkDto.getUserId());
         if (existingPaymentLink.isPresent()) {
             existingPaymentLink.get().setPaymentLink(paymentLinkDto.getPaymentLink());
             existingPaymentLink.get().setPaymentIntent(paymentLinkDto.getPaymentIntent());
             existingPaymentLink.get().setUpdatedOn(Instant.now());
             return paymentLinkRepository.save(existingPaymentLink.get());
-        } else {
+        } else {*/
             PaymentLink paymentLink = PaymentLink.builder()
                 .userId(paymentLinkDto.getUserId()).paymentLink(paymentLinkDto.getPaymentLink())
                 .paymentIntent(paymentLinkDto.getPaymentIntent()).build();
             paymentLink.setCreatedOn(Instant.now());
             log.info("Saving new paymentLink for userId {}", paymentLink.getUserId());
             return paymentLinkRepository.save(paymentLink);
-        }
+       // }
     }
 
     @Override
@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentLink.setPaymentLink(paymentLinkDto.getPaymentLink());
         }
         if (StringUtils.isNotEmpty(paymentLinkDto.getPaymentIntent())) {
-            paymentLink.setPaymentLink(paymentLinkDto.getPaymentIntent());
+            paymentLink.setPaymentIntent(paymentLinkDto.getPaymentIntent());
         }
         return paymentLinkRepository.save(paymentLink);
     }
