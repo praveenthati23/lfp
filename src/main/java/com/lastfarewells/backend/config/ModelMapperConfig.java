@@ -1,10 +1,12 @@
 package com.lastfarewells.backend.config;
 
 import com.lastfarewells.backend.dto.AddressDto;
+import com.lastfarewells.backend.dto.MemorialDto;
 import com.lastfarewells.backend.dto.PaymentDto;
 import com.lastfarewells.backend.dto.UpdateUserDto;
 import com.lastfarewells.backend.dto.UserDetailsDto;
 import com.lastfarewells.backend.entity.Address;
+import com.lastfarewells.backend.entity.Memorial;
 import com.lastfarewells.backend.entity.Payment;
 import com.lastfarewells.backend.entity.Users;
 import org.modelmapper.Condition;
@@ -86,6 +88,23 @@ public class ModelMapperConfig {
                 when(notNull).map().setCheckoutId(source.getCheckoutId());
                 when(notNull).map().setPaymentIntent(source.getPaymentIntent());
                 skip().setId(null);
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<MemorialDto, Memorial>() {
+            @Override
+            protected void configure() {
+                Condition<?, ?> notNull = Conditions.isNotNull();
+
+                //when(notNull).map().setUserId(source.getUserId());
+                when(notNull).map().setBackgroundImage(source.getBackgroundImage());
+                when(notNull).map().setHeadshot(source.getHeadshot());
+                when(notNull).map().setEpitaph(source.getEpitaph());
+                when(notNull).map().setObituary(source.getObituary());
+                when(notNull).map().setAlias(source.getAlias());
+                when(notNull).map().setIsTributePage(source.getIsTributePage());
+                skip().setId(null);
+                skip().setUserId(null);
             }
         });
 
