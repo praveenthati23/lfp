@@ -252,4 +252,16 @@ CREATE TABLE IF NOT EXISTS playlists (
   updated_on TIMESTAMP
 );
 --------------------------------
+CREATE TABLE IF NOT EXISTS failed_emails (
+  id serial PRIMARY KEY,
+  notification_type VARCHAR( 255 ),
+  email_address VARCHAR ( 255 ),
+  action VARCHAR ( 255 ),
+  diagnostic_code TEXT,
+  subject VARCHAR ( 255 ),
+  date TIMESTAMP,
+  created_on TIMESTAMP NOT NULL,
+  updated_on TIMESTAMP
+);
+--------------------------------
 

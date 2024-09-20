@@ -25,7 +25,7 @@ public class LFareWellConstants {
 	public static final String STILL_MORE_VALUE = "still_more_value";
 	public static final String RECIPIENT = "recipient";
 	public static final String CONTENT = "content";
-	public static final String UI_URL="appUrl";
+	public static final String UI_URL = "appUrl";
 
 	public static final String RECIPIENT_UPDATE_SUCCESS_MSG = "Record has been updated successfully.";
 	public static final String RECIPIENT_UPDATE_DELETE_MSG = "Record has been deleted successfully";
@@ -34,4 +34,9 @@ public class LFareWellConstants {
 	public static final String CLIENT_CREDENTIALS = "client_credentials";
 	public static final String ACCESS_TOKEN = "access_token";
 
+	public static final String MESSAGE = "Message";
+	public static final String COMMONHEADERS = "commonHeaders";
+	public static final String TIMESTAMP = "timestamp";
+	public static final String NOTIFICATION_TYPE = "notificationtype";
+	public static final String BOUNCE = "bounce";
 }
