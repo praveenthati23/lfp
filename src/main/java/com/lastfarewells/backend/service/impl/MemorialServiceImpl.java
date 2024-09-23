@@ -41,7 +41,13 @@ public class MemorialServiceImpl implements MemorialService {
 
     @Override
     public Memorial getUserMemorial(Long userId) {
-        return memorialRepository.findByUserId(userId).orElseThrow(() -> new MemorialException("Memorial not found for user"));
+        Optional<Memorial> memorial = memorialRepository.findByUserId(userId);
+        if (memorial.isPresent()) {
+            return memorial.get();
+        } else {
+            return memorialRepository.save(Memorial.builder()
+                .userId(userId).createdOn(Instant.now()).isTributePage(true).build());
+        }
     }
 
     @Override
