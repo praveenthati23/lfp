@@ -70,15 +70,13 @@ spotify:
   client_secret: <client_secret>
   redirect_uri: http://localhost:9061/core/spotify/callback
   scope : user-read-private,user-read-email,playlist-modify-public,playlist-modify-private
+  tokenUrl :  https://accounts.spotify.com/api/token
 
- 
 sqs:     
  accesskey: <accesskey>
  secretkey: <secretekey>
  queueName: lf_email_fail_queue
  region: us-east-1  
-
-  
 
 app:
  url: https://lastfarewellsapp.com/   
