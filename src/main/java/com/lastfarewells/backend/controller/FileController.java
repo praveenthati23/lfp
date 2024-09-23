@@ -35,7 +35,9 @@ public class FileController {
 		// {"directory":"audios","fileType":"audio/mpeg","name":"Recorded
 		// Audio","size":"82705","extension":"mpga"}
 
+
 		return new ResponseEntity<presigUrlUploadResult>(storjService.getUploadUrl(presignedUrlObj), HttpStatus.OK);
+
 
 	}
 

@@ -24,5 +24,6 @@ public class SpotifyConfiguration {
 		URI redirectedURL = SpotifyHttpManager.makeUri(redirectUri);
 		return new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret)
 				.setRedirectUri(redirectedURL).build();
+
 	}
 }

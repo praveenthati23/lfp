@@ -46,8 +46,7 @@ public class MessengerServiceImpl implements MessengerService {
     
     @Value("${app.url}")
     private String appUrl;
-    
-    
+
 
     @Override
     public Messenger createMessenger(MessengerRequestDto messengerRequestDto) {
@@ -72,7 +71,9 @@ public class MessengerServiceImpl implements MessengerService {
             messenger.getFirstName() + (StringUtils.isNotEmpty(messenger.getLastName()) ? " " + messenger.getLastName() : ""));
         props.put(LFareWellConstants.USER_NAME, JWTUtils.getCurrentUserSub());
         props.put(LFareWellConstants.TOKEN, token);
+
         props.put(LFareWellConstants.UI_URL, appUrl);
+
 
         EmailMessage emailMsg = emailBuilder(fromAddress, messenger.getEmail(),
             LFareWellConstants.MESSENGER_INVITATION_SUBJECT, LFareWellConstants.MESSENGER_INVITATION_TEMPLATE, props);
@@ -110,7 +111,9 @@ public class MessengerServiceImpl implements MessengerService {
                 messenger.getFirstName() + (StringUtils.isNotEmpty(messenger.getLastName()) ? " " + messenger.getLastName() : ""));
             props.put(LFareWellConstants.USER_NAME, JWTUtils.getCurrentUserSub());
             props.put(LFareWellConstants.TOKEN, token);
+
             props.put(LFareWellConstants.UI_URL, appUrl);
+
             
             EmailMessage emailMsg = emailBuilder(fromAddress, messenger.getEmail(),
                 LFareWellConstants.MESSENGER_INVITATION_SUBJECT, LFareWellConstants.MESSENGER_INVITATION_TEMPLATE, props);
@@ -159,7 +162,9 @@ public class MessengerServiceImpl implements MessengerService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM dd, yyyy");
         LocalDate currentDate = LocalDate.now().plusMonths(1);
         props.put(LFareWellConstants.DATE, currentDate.format(formatter));
+
         props.put(LFareWellConstants.UI_URL, appUrl);
+
 
         EmailMessage emailMsg = emailBuilder(fromAddress, messenger.getEmail(),
             LFareWellConstants.MESSENGER_INVITATION_REMINDER_SUBJECT.replace("####", currentUser), LFareWellConstants.MESSENGER_INVITATION_REMINDER_TEMPLATE, props);

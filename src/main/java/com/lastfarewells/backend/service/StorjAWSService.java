@@ -46,7 +46,9 @@ public class StorjAWSService {
 	private final PresignedUrlService presignedUrlService;
 	private final S3Client s3Client;
 
+
 	public presigUrlUploadResult getUploadUrl(PresignedUrl presingedUrl) throws Exception {
+
 		log.info("call to getUploadUrl");
 		presigUrlUploadResult result = new presigUrlUploadResult();
 
@@ -105,8 +107,10 @@ public class StorjAWSService {
 	}
 
 	public String deleteFile(String fileName) {
+
 		DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucketName).key(fileName)
 				.build();
+
 
 		s3Client.deleteObject(deleteObjectRequest);
 		log.info("File deleted successfully: " + fileName);
@@ -114,3 +118,4 @@ public class StorjAWSService {
 	}
 
 }
+

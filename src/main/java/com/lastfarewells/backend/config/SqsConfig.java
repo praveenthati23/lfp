@@ -9,17 +9,22 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
+
+
 @Configuration
 public class SqsConfig {
 
 	@Value("${sqs.accesskey}")
 	private String accessKey;
 
+
 	@Value("${sqs.secretkey}")
+
 	private String secretKey;
 
 	@Value("${sqs.region}")
 	private String region;
+
 
 	@Bean
 	public SqsAsyncClient sqsAsyncClient() {
@@ -27,4 +32,5 @@ public class SqsConfig {
 				.credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretKey)))
 				.build();
 	}
+
 }

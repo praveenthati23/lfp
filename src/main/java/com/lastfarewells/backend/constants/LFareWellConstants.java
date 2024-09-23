@@ -25,14 +25,20 @@ public class LFareWellConstants {
 	public static final String STILL_MORE_VALUE = "still_more_value";
 	public static final String RECIPIENT = "recipient";
 	public static final String CONTENT = "content";
+
 	public static final String UI_URL = "appUrl";
+
+
+
 
 	public static final String RECIPIENT_UPDATE_SUCCESS_MSG = "Record has been updated successfully.";
 	public static final String RECIPIENT_UPDATE_DELETE_MSG = "Record has been deleted successfully";
 	public static final String RECIPIENT_DUPLICATE_EMAIL_MSG = "The email address already exists in your Recipient.";
 	public static final String RECIPIENT_INVALID_MSG = "Recipient request not found";
+
 	public static final String CLIENT_CREDENTIALS = "client_credentials";
 	public static final String ACCESS_TOKEN = "access_token";
+
 
 	public static final String MESSAGE = "Message";
 	public static final String COMMONHEADERS = "commonHeaders";

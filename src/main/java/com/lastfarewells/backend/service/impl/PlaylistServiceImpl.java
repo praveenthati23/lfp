@@ -25,6 +25,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 	@Override
 	public Paging<Track> searchTracks(String query) {
 		try {
+
 			SpotifyApi.setAccessToken(SpotifyClient.getSpotifyAccessToken());
 			final SearchTracksRequest searchTracksRequest = SpotifyApi.searchTracks(query).build();
 			Future<Paging<Track>> trackPagingFuture = searchTracksRequest.executeAsync();

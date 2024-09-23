@@ -1,16 +1,5 @@
 package com.lastfarewells.backend.controller;
 
-import com.lastfarewells.backend.dto.LoginDto;
-import com.lastfarewells.backend.dto.PasswordResetDto;
-import com.lastfarewells.backend.dto.SignupDto;
-import com.lastfarewells.backend.dto.UpdateUserDto;
-import com.lastfarewells.backend.dto.UserAccessTokenDto;
-import com.lastfarewells.backend.dto.UserDetailsDto;
-import com.lastfarewells.backend.dto.VerifyEmailDto;
-import com.lastfarewells.backend.entity.Users;
-import com.lastfarewells.backend.service.UserService;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +8,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.lastfarewells.backend.dto.LoginDto;
+import com.lastfarewells.backend.dto.PasswordResetDto;
+import com.lastfarewells.backend.dto.SignupDto;
+import com.lastfarewells.backend.dto.UpdatePasswordDto;
+import com.lastfarewells.backend.dto.UpdateUserDto;
+import com.lastfarewells.backend.dto.UserAccessTokenDto;
+import com.lastfarewells.backend.dto.UserDetailsDto;
+import com.lastfarewells.backend.dto.VerifyEmailDto;
+import com.lastfarewells.backend.entity.Users;
+import com.lastfarewells.backend.service.UserService;
+
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -69,6 +72,12 @@ public class UserController {
     @PutMapping("/{id}")
     public Users updateUser(@PathVariable Long id, @RequestBody UpdateUserDto updateUserDto) {
         return userService.updateUser(id, updateUserDto);
+    }
+    
+    @PutMapping("/user/update-password")
+    public String updateUserPassword(@RequestBody @Valid UpdatePasswordDto updatePasswordDto) {
+        userService.updateUserPassword(updatePasswordDto);
+        return "Password successfully updated!";
     }
 
 }

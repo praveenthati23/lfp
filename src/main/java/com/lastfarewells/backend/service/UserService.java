@@ -3,6 +3,7 @@ package com.lastfarewells.backend.service;
 import com.lastfarewells.backend.dto.LoginDto;
 import com.lastfarewells.backend.dto.PasswordResetDto;
 import com.lastfarewells.backend.dto.SignupDto;
+import com.lastfarewells.backend.dto.UpdatePasswordDto;
 import com.lastfarewells.backend.dto.UpdateUserDto;
 import com.lastfarewells.backend.dto.UserAccessTokenDto;
 import com.lastfarewells.backend.dto.UserDetailsDto;
@@ -25,5 +26,7 @@ public interface UserService {
     UserDetailsDto getUser();
 
     Users updateUser(Long id, UpdateUserDto updateUserDto);
+
+	void updateUserPassword(UpdatePasswordDto updatePasswordDto);
 
 }

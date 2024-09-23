@@ -33,6 +33,7 @@ public class SpotifyClient {
 
 	public String getSpotifyAccessToken() {
 		try {
+
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 			MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();

@@ -45,7 +45,10 @@
     <p th:text="'We\'re following up on your invitation to become a Messenger for ' + ${userName} + ' on Last Farewells. Your confirmation is vital for the completion of their account setup and we\'re yet to receive it.'"></p><br>
 
 
+
       <a th:href="@{|${appUrl}messengers/${token}|}" class="invite-button">CONFIRM MESSENGER INVITATION</a><br>
+
+
 
     <p th:text="'Please let us know your decision by ' + ${date} + '. It\'s important for '  + ${userName} +' to have their Messenger in place. If we don\'t receive a response by the specified date, we will inform '  + ${userName} + ' that you are not available to accept this role.'"></p>
 

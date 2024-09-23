@@ -16,13 +16,16 @@ import com.lastfarewells.backend.entity.FailedEmails;
 import com.lastfarewells.backend.repository.FailedEmailsRepository;
 
 import io.awspring.cloud.sqs.annotation.SqsListener;
+
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class MailListener {
+
 
 	private final FailedEmailsRepository failedEmailsRepo;
 
@@ -63,6 +66,7 @@ public class MailListener {
 			log.error("Exception while convert SQS Message To FailedEmail " + e.getMessage());
 		}
 		return failedEmailsList;
+
 	}
 
 }

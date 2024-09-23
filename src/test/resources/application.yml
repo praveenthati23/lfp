@@ -62,13 +62,38 @@ keycloak:
 
 jwt:
   secret-key: ${JWT_KEY:IrM8Cliyu7LLSo8rDIR4rMtnioM/8BEhftDNwx+zCeg49eBpGoTJELmkmNbRktag7YPQT9he21ti/1WWd55rPw==}
+<<<<<<< HEAD
+<<<<<<< HEAD
    
+=======
+  
+  
+>>>>>>> 288b68f (spotify search api changes)
+=======
+   
+>>>>>>> 98b65f2 (added review changes)
 spotify:
   client_id : <client_id>
   client_secret: <client_secret>
   redirect_uri: http://localhost:9061/core/spotify/callback
   scope : user-read-private,user-read-email,playlist-modify-public,playlist-modify-private
+<<<<<<< HEAD
+<<<<<<< HEAD
   tokenUrl :  https://accounts.spotify.com/api/token   
   
 app:
   url: http://52.4.2.154/  
+=======
+  tokenUrl :  https://accounts.spotify.com/api/token   
+>>>>>>> 288b68f (spotify search api changes)
+=======
+  tokenUrl :  https://accounts.spotify.com/api/token   
+  
+<<<<<<< HEAD
+ui:
+  url: http://52.4.2.154/  
+>>>>>>> 86f236a (ui url changes)
+=======
+app:
+  url: http://52.4.2.154/  
+>>>>>>> eec5293 (rename to app url)
