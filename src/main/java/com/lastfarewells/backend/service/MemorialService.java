@@ -13,4 +13,6 @@ public interface MemorialService {
 
     void deleteMemorial(Long id);
 
+    Boolean getUserMemorial(String alias);
+
 }

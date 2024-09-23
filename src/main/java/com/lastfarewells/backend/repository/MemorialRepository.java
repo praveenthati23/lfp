@@ -8,4 +8,6 @@ public interface MemorialRepository extends JpaRepository<Memorial, Long> {
 
     Optional<Memorial> findByUserId(Long userId);
 
+    Optional<Memorial> findByAliasIgnoreCase(String alias);
+
 }

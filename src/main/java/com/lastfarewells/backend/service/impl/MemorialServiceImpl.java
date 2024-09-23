@@ -2,7 +2,6 @@ package com.lastfarewells.backend.service.impl;
 
 import com.lastfarewells.backend.dto.MemorialDto;
 import com.lastfarewells.backend.entity.Memorial;
-import com.lastfarewells.backend.entity.Messages;
 import com.lastfarewells.backend.exception.MemorialException;
 import com.lastfarewells.backend.exception.MessengesException;
 import com.lastfarewells.backend.repository.MemorialRepository;
@@ -65,6 +64,11 @@ public class MemorialServiceImpl implements MemorialService {
             .orElseThrow(() -> new MessengesException("Memorial request not found"));
         log.info("Deleting memorial with id : {}", id);
         memorialRepository.deleteById(memorial.getId());
+    }
+
+    @Override
+    public Boolean getUserMemorial(String alias) {
+        return !memorialRepository.findByAliasIgnoreCase(alias).isPresent();
     }
 
 
