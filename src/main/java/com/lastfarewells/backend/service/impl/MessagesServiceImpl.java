@@ -14,6 +14,8 @@ import com.lastfarewells.backend.repository.MessengerRepository;
 import com.lastfarewells.backend.repository.RecipientRepository;
 import com.lastfarewells.backend.service.MessagesService;
 import java.time.Instant;
+import java.util.Date;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -156,4 +158,23 @@ public class MessagesServiceImpl implements MessagesService {
         messagesRepository.deleteById(messages.getId());
     }
 
+    @Override
+    public void updateMessageStatusForEmail(String email) {
+        List<Messages> todaysMessages = messagesRepository.findAllByDeliveryDate(new Date());
+        todaysMessages.forEach(message -> {
+            if (message.getRecipient() != null && StringUtils.isNotEmpty(message.getRecipient().getEmail()) &&
+                message.getRecipient().getEmail().equalsIgnoreCase(email)) {
+                log.info("Updating message status for {} to FAILED", message.getId());
+                message.setStatus(MessageStatusEnum.FAILED);
+                messagesRepository.save(message);
+                return;
+            }
+            if (message.getMessenger() != null && StringUtils.isNotEmpty(message.getMessenger().getEmail()) &&
+                message.getMessenger().getEmail().equalsIgnoreCase(email)) {
+                log.info("Updating message status for {} to FAILED", message.getId());
+                message.setStatus(MessageStatusEnum.FAILED);
+                messagesRepository.save(message);
+            }
+        });
+    }
 }
