@@ -29,9 +29,8 @@ public class RecipientServiceImpl implements RecipientService {
 	@Override
 	public Recipient createRecipient(RecipientDto recipientDto) {
 		log.info("creating Recipient");
-
-		Optional<Recipient> existingRecipient = recipientRepository.findByEmailAndUserId(recipientDto.getEmail(),
-				recipientDto.getUserId());
+		Optional<Recipient> existingRecipient = recipientRepository
+				.findByEmailAndUserIdAndIsUserRecipient(recipientDto.getEmail(), recipientDto.getUserId(), true);
 
 		if (existingRecipient.isPresent()) {
 			throw new RecipientException(LFareWellConstants.RECIPIENT_DUPLICATE_EMAIL_MSG);
@@ -49,14 +48,12 @@ public class RecipientServiceImpl implements RecipientService {
 	@Override
 	public String updateRecipent(Long id, RecipientDto recipientDto) {
 
-
 		log.info("updating Recipient: " + id);
 		Recipient recipient = recipientRepository.findById(id)
 				.orElseThrow(() -> new RecipientException(LFareWellConstants.RECIPIENT_INVALID_MSG));
 
-		Optional<Recipient> existingRecipient = recipientRepository.findByEmailAndUserId(recipientDto.getEmail(),
-
-				recipientDto.getUserId());
+		Optional<Recipient> existingRecipient = recipientRepository
+				.findByEmailAndUserIdAndIsUserRecipient(recipientDto.getEmail(), recipientDto.getUserId(), true);
 
 		if (existingRecipient.isPresent() && !existingRecipient.get().getId().equals(id)) {
 			throw new RecipientException(LFareWellConstants.RECIPIENT_DUPLICATE_EMAIL_MSG);

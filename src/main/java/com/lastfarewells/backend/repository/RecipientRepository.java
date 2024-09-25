@@ -14,6 +14,6 @@ public interface RecipientRepository extends JpaRepository<Recipient, Long> {
 
 	Page<Recipient> findAllByUserIdAndIsUserRecipient(Long userId, boolean isUserRecipient, Pageable pageable);
 
-	Optional<Recipient> findByEmailAndUserId(String email, Long userId);
+	Optional<Recipient> findByEmailAndUserIdAndIsUserRecipient(String email, Long userId, boolean isUserRecipient);
 
 }
