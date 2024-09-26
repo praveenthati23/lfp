@@ -17,7 +17,7 @@ public class LFareWellConstants {
 	public static final String LAST_MESSAGE_TEMPLATE = "last_message";
 	public static final String MESSENGER_DECLINED_SUBJECT = "Update: #### Declined Messenger Invitation on Last Farewells";
 	public static final String MESSENGER_DECLINED_TEMPLATE = "messenger_decline";
-	
+
 	public static final String USER_NAME = "userName";
 	public static final String TOKEN = "token";
 	public static final String SUBJECT = "subject";
@@ -30,9 +30,6 @@ public class LFareWellConstants {
 
 	public static final String UI_URL = "appUrl";
 
-
-
-
 	public static final String RECIPIENT_UPDATE_SUCCESS_MSG = "Record has been updated successfully.";
 	public static final String RECIPIENT_UPDATE_DELETE_MSG = "Record has been deleted successfully";
 	public static final String RECIPIENT_DUPLICATE_EMAIL_MSG = "The email address already exists in your Recipient.";
@@ -40,7 +37,6 @@ public class LFareWellConstants {
 
 	public static final String CLIENT_CREDENTIALS = "client_credentials";
 	public static final String ACCESS_TOKEN = "access_token";
-
 
 	public static final String MESSAGE = "Message";
 	public static final String COMMONHEADERS = "commonHeaders";
