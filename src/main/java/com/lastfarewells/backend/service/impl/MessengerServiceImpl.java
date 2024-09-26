@@ -238,4 +238,12 @@ public class MessengerServiceImpl implements MessengerService {
             return number + "th"; // Default case for numbers beyond 10
         }
     }
+
+    @Override
+    public void deleteMessenger(Long id) {
+        Messenger messenger = messengerRepository.findById(id)
+            .orElseThrow(() -> new MessengerException("Messenger not found"));
+        log.info("Deleting Messenger with id : {}", id);
+        messengerRepository.deleteById(messenger.getId());
+    }
 }
