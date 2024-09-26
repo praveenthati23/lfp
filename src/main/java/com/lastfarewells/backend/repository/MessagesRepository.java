@@ -27,4 +27,5 @@ public interface MessagesRepository extends JpaRepository<Messages, Long> {
         + " from Messages where user_id= :userId", nativeQuery = true)
     LastMessageCount findMessageCountByUserId(@Param("userId") Long userId);
 
+    List<Messages> findAllByDeliveryDate(Date deliveryDate);
 }

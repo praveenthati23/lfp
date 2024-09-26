@@ -16,4 +16,5 @@ public interface MessagesService {
 
     void deleteMessages(Long id);
 
+    void updateMessageStatusForEmail(String email);
 }
