@@ -37,6 +37,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 	private final SpotifyClient SpotifyClient;
 	private final PlayListRepository playListRepository;
 	private final UsersRepository usersRepo;
+	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
 	public Paging<Track> searchTracks(String query) {
@@ -58,8 +59,6 @@ public class PlaylistServiceImpl implements PlaylistService {
 				.getAuthentication();
 		String userEmail = authentication.getTokenAttributes().get("email").toString();
 		Users user = usersRepo.findByEmail(userEmail).get();
-
-		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			JsonNode jsonNode = objectMapper.readTree(playlist);
 			String id = jsonNode.get(LFareWellConstants.ID).asText();
@@ -82,9 +81,8 @@ public class PlaylistServiceImpl implements PlaylistService {
 		}
 	}
 
-	public PlayListDto playListDtoMapper(PlayList playListObj) {
+	private PlayListDto playListDtoMapper(PlayList playListObj) {
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
 			ImageDto imageDto = objectMapper.readValue(playListObj.getImageUrl(), ImageDto.class);
 			PlayListDto playlistDto = PlayListDto.builder().id(playListObj.getId()).name(playListObj.getName())
 					.userId(playListObj.getUserId()).externalId(playListObj.getExternalId())
@@ -110,6 +108,6 @@ public class PlaylistServiceImpl implements PlaylistService {
 	@Override
 	public String deletePlaylist(Long id) {
 		playListRepository.deleteById(id);
-		return "Deleted PlayList Successfully";
+		return "Deleted PlayList id: "+id+" Successfully";
 	}
 }
