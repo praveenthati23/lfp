@@ -25,4 +25,6 @@ public interface MessengerService {
     void acceptInvitation(MessengerActionDto messengerActionDto);
 
     Page<MessengerForDto> findAllUsersForMessengerfor(PageRequest pageRequest, Long userId);
+
+    void deleteMessenger(Long id);
 }
