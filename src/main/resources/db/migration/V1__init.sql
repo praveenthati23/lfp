@@ -264,4 +264,9 @@ CREATE TABLE IF NOT EXISTS failed_emails (
   updated_on TIMESTAMP
 );
 --------------------------------
+ALTER TABLE playlists
+ADD COLUMN artist_name VARCHAR ( 255 );
+
+ALTER TABLE playlists
+ADD COLUMN preview_url VARCHAR ( 255 );
 

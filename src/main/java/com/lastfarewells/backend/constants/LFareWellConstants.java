@@ -45,4 +45,11 @@ public class LFareWellConstants {
 	public static final String TIMESTAMP = "timestamp";
 	public static final String NOTIFICATION_TYPE = "notificationtype";
 	public static final String BOUNCE = "bounce";
+	public static final String ALBUM = "album";
+	public static final String ID = "id";
+	public static final String NAME = "name";
+	public static final String IMAGES = "images";
+	public static final String DURATION_MS = "duration_ms";
+	public static final String PREVIEW_URL = "preview_url";
+	public static final String ARTISTS = "artists";
 }
