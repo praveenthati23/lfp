@@ -27,7 +27,7 @@ public interface MessengerRepository extends JpaRepository<Messenger, Long> {
 
     @Query(value = "select m.messenger_for as id, u.first_name as firstName, u.last_name as lastName, u.email,  "
         + " CASE "
-        + "    WHEN d.status = 'Confirmed' THEN true "
+        + "    WHEN d.status = 'CONFIRMED' THEN true "
         + "    ELSE false "
         + "  END  "
         + "  AS isDeceased, "
