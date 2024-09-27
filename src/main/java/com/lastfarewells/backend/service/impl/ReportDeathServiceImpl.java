@@ -22,6 +22,7 @@ public class ReportDeathServiceImpl implements ReportDeathService {
         DeathReport deathReport = DeathReport.builder().userId(deathReportDto.getUserId())
             .deathDate(deathReportDto.getDeathDate()).attachment(deathReportDto.getAttachment())
             .attachmentFilename(deathReportDto.getAttachmentFilename()).obituaryLink(deathReportDto.getObituaryLink())
+            .status("Pending")
             .createdOn(Instant.now()).build();
         return deathReportRepository.save(deathReport);
     }

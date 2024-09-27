@@ -180,7 +180,21 @@ public class MessengerServiceImpl implements MessengerService {
         if (!messengerActionDto.getIsAccepted()) {
             log.info("Messenger {} has declined the request for user {}", messenger.getEmail(), messenger.getMessengerFor());
             messengerRepository.delete(messenger);
-            // TODO send decline mail to MessengerFor
+
+            Users messengerForUser = usersRepository.findById(messenger.getMessengerFor())
+                .orElseThrow(() -> new MessengerException("Invalid token not found"));
+
+            // send decline mail to MessengerFor
+            Map<String, Object> props = new HashedMap<>();
+            String messengerName = messenger.getFirstName() + (StringUtils.isNotEmpty(messenger.getLastName()) ? " " + messenger.getLastName() : "");
+            props.put(LFareWellConstants.MESSENGER, messengerName);
+            props.put(LFareWellConstants.USER_NAME,
+                messengerForUser.getFirstName() + (StringUtils.isNotEmpty(messengerForUser.getLastName()) ? " " + messengerForUser.getLastName() : ""));
+
+            EmailMessage declineEmailMsg = emailBuilder(fromAddress, messengerForUser.getEmail(),
+                LFareWellConstants.MESSENGER_DECLINED_SUBJECT.replace("####", messengerName), LFareWellConstants.MESSENGER_DECLINED_TEMPLATE, props);
+
+            emailService.sendEmail(declineEmailMsg);
         } else {
             Users messengerForUser = usersRepository.findById(messenger.getMessengerFor())
                 .orElseThrow(() -> new MessengerException("Invalid token not found"));
