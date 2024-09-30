@@ -270,3 +270,7 @@ ADD COLUMN artist_name VARCHAR ( 255 );
 ALTER TABLE playlists
 ADD COLUMN preview_url VARCHAR ( 255 );
 
+ALTER TABLE death_report
+ADD COLUMN declined_at TIMESTAMP;
+ALTER TABLE death_report
+ADD COLUMN decline_reason TEXT;

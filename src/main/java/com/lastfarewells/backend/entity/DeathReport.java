@@ -48,6 +48,10 @@ public class DeathReport {
     private String  statusNote;
     @Column(name = "custom_note")
     private String  customNote;
+    @Column(name = "decline_reason")
+    private String  declineReason;
+    @Column(name = "declined_at")
+    private Instant declinedAt;
     @Column(name = "created_on")
     private Instant createdOn;
     @Column(name = "updated_on")

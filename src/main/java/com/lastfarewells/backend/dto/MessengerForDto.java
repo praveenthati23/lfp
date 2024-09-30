@@ -41,4 +41,7 @@ public interface MessengerForDto {
 
     Instant getDeathReportUpdatedOn();
 
+    Instant getDeclinedAt();
+
+    String getDeclineReason();
 }

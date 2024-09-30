@@ -34,7 +34,7 @@ public interface MessengerRepository extends JpaRepository<Messenger, Long> {
         + "d.user_id as userId, d.death_date as deathDate, d.attachment, d.attachment_filename as attachmentFilename, "
         + "d.obituary_link as obituaryLink, d.is_verified as isVerified, d.verified_by as verifiedBy, "
         + "d.verified_at as verifiedAt, d.status, d.status_note as statusNote, d.custom_note as customNote, "
-        + "d.created_on as deathReportCreatedOn, d.updated_on as deathReportUpdatedOn "
+        + "d.created_on as deathReportCreatedOn, d.updated_on as deathReportUpdatedOn, d.declined_at as declinedAt, d.decline_reason as declineReason "
         + "from messengers m "
         + "LEFT JOIN users u "
         + "ON m.messenger_for = u.id "
