@@ -177,8 +177,7 @@ public class UserServiceImpl implements UserService {
         log.info("User {} requested for password reset", email);
 
         String token = JWTUtils.generateVerificationToken(user.getIamId());
-        // TODO remove println as soon as mail sender is done
-        System.out.println("**** : " + token);
+
         // Store token for validation
 
         EmailMessage emailMsg = getEmailMessagePojo(fromAddress, user.getEmail(),
@@ -293,6 +292,20 @@ public class UserServiceImpl implements UserService {
             throw new UserException("Password update failed");
         }
 
+    }
+
+    @Override
+    public String verifyResetToken(VerifyEmailDto verifyEmailDto) {
+        // Validate token expiration
+        String subject = JWTUtils.getEmailFromToken(verifyEmailDto.getToken());
+
+        Users user = usersRepository.findByIamId(subject)
+            .orElseThrow(() -> new UserException("Invalid token for User"));
+
+        if (!JWTUtils.verifyToken(verifyEmailDto.getToken())) {
+            throw new UserAuthenticationException("Invalid or expired token");
+        }
+        return user.getEmail();
     }
 
 }
