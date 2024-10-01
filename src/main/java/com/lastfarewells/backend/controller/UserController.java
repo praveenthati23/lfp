@@ -80,4 +80,8 @@ public class UserController {
         return "Password successfully updated!";
     }
 
+    @PostMapping("/auth/verify-reset-token")
+    public String verifyResetToken(@RequestBody @Valid VerifyEmailDto verifyEmailDto) {
+        return userService.verifyResetToken(verifyEmailDto);
+    }
 }

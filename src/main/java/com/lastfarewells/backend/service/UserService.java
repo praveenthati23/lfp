@@ -27,6 +27,8 @@ public interface UserService {
 
     Users updateUser(Long id, UpdateUserDto updateUserDto);
 
-	void updateUserPassword(UpdatePasswordDto updatePasswordDto);
+    void updateUserPassword(UpdatePasswordDto updatePasswordDto);
+
+    String verifyResetToken(VerifyEmailDto verifyEmailDto);
 
 }
