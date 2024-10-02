@@ -16,14 +16,10 @@ public class SpotifyConfiguration {
 	private String clientId;
 	@Value("${spotify.client_secret}")
 	private String clientSecret;
-	@Value("${spotify.redirect_uri}")
-	private String redirectUri;
 
 	@Bean
 	public SpotifyApi getSpotifyObject() {
-		URI redirectedURL = SpotifyHttpManager.makeUri(redirectUri);
-		return new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret)
-				.setRedirectUri(redirectedURL).build();
+		return new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).build();
 
 	}
 }
