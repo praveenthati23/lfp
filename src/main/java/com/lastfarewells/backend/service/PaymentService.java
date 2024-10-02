@@ -15,6 +15,8 @@ public interface PaymentService {
 
     PaymentLink updatePaymentLink(PaymentLinkDto paymentLinkDto);
 
+    void deletePaymentLink(Long userId);
+
     Payment createPayment(PaymentDto paymentDto);
 
     Page<Payment> findAllPayments(PageRequest pageRequest, Long userId);

@@ -9,6 +9,7 @@ import com.lastfarewells.backend.repository.PaymentLinkRepository;
 import com.lastfarewells.backend.repository.PaymentRepository;
 import com.lastfarewells.backend.service.PaymentService;
 import java.time.Instant;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -38,10 +39,13 @@ public class PaymentServiceImpl implements PaymentService {
             existingPaymentLink.get().setUpdatedOn(Instant.now());
             return paymentLinkRepository.save(existingPaymentLink.get());
         } else {*/
-        PaymentLink paymentLink = PaymentLink.builder()
-            .userId(paymentLinkDto.getUserId()).paymentLink(paymentLinkDto.getPaymentLink())
-            .paymentIntent(paymentLinkDto.getPaymentIntent()).build();
-        paymentLink.setCreatedOn(Instant.now());
+
+        PaymentLink paymentLink = paymentLinkRepository.findByUserId(paymentLinkDto.getUserId())
+            .orElse(PaymentLink.builder()
+                .userId(paymentLinkDto.getUserId()).createdOn(Instant.now()).build());
+        paymentLink.setPaymentLink(paymentLinkDto.getPaymentLink());
+        paymentLink.setPaymentIntent(paymentLinkDto.getPaymentIntent());
+        paymentLink.setUpdatedOn(Instant.now());
         log.info("Saving new paymentLink for userId {}", paymentLink.getUserId());
         return paymentLinkRepository.save(paymentLink);
         // }
@@ -67,6 +71,15 @@ public class PaymentServiceImpl implements PaymentService {
             paymentLink.setPaymentIntent(paymentLinkDto.getPaymentIntent());
         }
         return paymentLinkRepository.save(paymentLink);
+    }
+
+    @Override
+    public void deletePaymentLink(Long userId) {
+        Optional<PaymentLink> paymentLink = paymentLinkRepository.findByUserId(userId);
+        if (paymentLink.isPresent()) {
+            log.info("Deleting payment link for user: {}", userId);
+            paymentLinkRepository.deleteById(paymentLink.get().getId());
+        }
     }
 
     @Override
