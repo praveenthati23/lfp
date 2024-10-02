@@ -204,6 +204,11 @@ public class UserServiceImpl implements UserService {
 		}
 		try {
 			keycloakService.updatePassword(user.getIamId(), passwordResetDto.getPassword());
+			EmailMessage emailMsg = getEmailMessagePojo(fromAddress, user.getEmail(),
+					LFareWellConstants.UPDATE_PASSWORD_SUBJECT, LFareWellConstants.UPDATE_PASSWORD_TEMPLATE,
+					user.getFirstName() + " " + user.getLastName(), null);
+
+			emailService.sendEmail(emailMsg);
 		} catch (Exception e) {
 			log.error("Password Reset failed : {}", e.getMessage());
 			throw new UserException("Password Reset failed");
