@@ -17,6 +17,8 @@ public class LFareWellConstants {
 	public static final String LAST_MESSAGE_TEMPLATE = "last_message";
 	public static final String MESSENGER_DECLINED_SUBJECT = "Update: #### Declined Messenger Invitation on Last Farewells";
 	public static final String MESSENGER_DECLINED_TEMPLATE = "messenger_decline";
+	public static final String UPDATE_PASSWORD_SUBJECT = "Your Last Farewells Password Has Been Successfully Reset";
+	public static final String UPDATE_PASSWORD_TEMPLATE = "update_password";
 
 	public static final String USER_NAME = "userName";
 	public static final String TOKEN = "token";
