@@ -21,4 +21,6 @@ public interface PaymentService {
 
     Page<Payment> findAllPayments(PageRequest pageRequest, Long userId);
 
+    Payment findPaymentByCheckoutId(String checkoutId);
+
 }

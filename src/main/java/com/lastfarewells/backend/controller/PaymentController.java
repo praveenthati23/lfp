@@ -59,4 +59,9 @@ public class PaymentController {
         return paymentService.findAllPayments(PageRequest.of(page, size, Sort.by("id").descending()), userId);
     }
 
+    @GetMapping("")
+    public Payment findPaymentByCheckoutId(@RequestParam("checkoutId") String checkoutId) {
+        return paymentService.findPaymentByCheckoutId(checkoutId);
+    }
+
 }

@@ -95,5 +95,11 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.findAllByUserId(userId, pageRequest);
     }
 
+    @Override
+    public Payment findPaymentByCheckoutId(String checkoutId) {
+        return paymentRepository.findByCheckoutId(checkoutId)
+            .orElseThrow(() -> new PaymentException("Payment not found"));
+    }
+
 
 }
