@@ -8,6 +8,7 @@ import com.lastfarewells.backend.exception.PaymentException;
 import com.lastfarewells.backend.repository.PaymentLinkRepository;
 import com.lastfarewells.backend.repository.PaymentRepository;
 import com.lastfarewells.backend.service.PaymentService;
+import com.lastfarewells.backend.service.UserService;
 import java.time.Instant;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentLinkRepository paymentLinkRepository;
     private final PaymentRepository     paymentRepository;
     private final ModelMapper           modelMapper;
+    private final UserService userService;
 
     @Override
     public PaymentLink createPaymentLink(PaymentLinkDto paymentLinkDto) {
@@ -87,7 +89,12 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = modelMapper.map(paymentDto, Payment.class);
         payment.setCreatedOn(Instant.now());
         log.info("Saving payment for userId {}", payment.getUserId());
-        return paymentRepository.save(payment);
+        paymentRepository.save(payment);
+
+        // Upgrade user subscription
+        userService.updateSubscription(paymentDto.getUserId());
+
+        return payment;
     }
 
     @Override
