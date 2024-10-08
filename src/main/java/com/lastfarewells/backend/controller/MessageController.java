@@ -1,10 +1,9 @@
 package com.lastfarewells.backend.controller;
 
 import com.lastfarewells.backend.dto.MessagesDto;
-import com.lastfarewells.backend.dto.MessengerRequestDto;
+import com.lastfarewells.backend.dto.MessagesResponseDto;
 import com.lastfarewells.backend.entity.MessageTypeEnum;
 import com.lastfarewells.backend.entity.Messages;
-import com.lastfarewells.backend.entity.Messenger;
 import com.lastfarewells.backend.service.MessagesService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,7 @@ public class MessageController {
     private final MessagesService messagesService;
 
     @PostMapping("")
-    public Messages createMessages(@RequestBody @Valid MessagesDto messagesDto) {
+    public MessagesResponseDto createMessages(@RequestBody @Valid MessagesDto messagesDto) {
         return messagesService.createMessages(messagesDto);
     }
 

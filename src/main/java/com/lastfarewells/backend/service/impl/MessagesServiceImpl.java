@@ -1,21 +1,25 @@
 package com.lastfarewells.backend.service.impl;
 
 import com.lastfarewells.backend.dto.MessagesDto;
+import com.lastfarewells.backend.dto.MessagesResponseDto;
 import com.lastfarewells.backend.entity.DeliveryMethodEnum;
 import com.lastfarewells.backend.entity.MessageStatusEnum;
 import com.lastfarewells.backend.entity.MessageTypeEnum;
 import com.lastfarewells.backend.entity.Messages;
 import com.lastfarewells.backend.entity.Messenger;
 import com.lastfarewells.backend.entity.Recipient;
+import com.lastfarewells.backend.entity.Users;
 import com.lastfarewells.backend.exception.MessengerException;
 import com.lastfarewells.backend.exception.MessengesException;
 import com.lastfarewells.backend.repository.MessagesRepository;
 import com.lastfarewells.backend.repository.MessengerRepository;
 import com.lastfarewells.backend.repository.RecipientRepository;
+import com.lastfarewells.backend.repository.UsersRepository;
 import com.lastfarewells.backend.service.MessagesService;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,10 +36,11 @@ public class MessagesServiceImpl implements MessagesService {
     private final RecipientRepository recipientRepository;
     private final MessagesRepository  messagesRepository;
     private final MessengerRepository messengerRepository;
+    private final UsersRepository usersRepository;
 
     @Override
     @Transactional
-    public Messages createMessages(MessagesDto messagesDto) {
+    public MessagesResponseDto createMessages(MessagesDto messagesDto) {
         Messages messages = Messages.builder()
             .userId(messagesDto.getUserId()).messageType(messagesDto.getMessageType())
             .title(messagesDto.getTitle()).description(messagesDto.getDescription())
@@ -77,7 +82,9 @@ public class MessagesServiceImpl implements MessagesService {
         }
         messages.setCreatedOn(Instant.now());
         messages.setUpdatedOn(Instant.now());
-        return messagesRepository.save(messages);
+        messagesRepository.save(messages);
+
+        return checkAndBuildMessage(messages);
     }
 
     @Override
@@ -176,5 +183,44 @@ public class MessagesServiceImpl implements MessagesService {
                 messagesRepository.save(message);
             }
         });
+    }
+
+
+    private MessagesResponseDto checkAndBuildMessage(Messages messages) {
+        MessagesResponseDto messagesResponseDto = MessagesResponseDto.builder().id(messages.getId()).userId(messages.getUserId())
+            .recipient(messages.getRecipient()).messenger(messages.getMessenger()).status(messages.getStatus())
+            .messageType(messages.getMessageType()).title(messages.getTitle()).description(messages.getDescription())
+            .content(messages.getContent()).fileName(messages.getFileName()).deliverOnDeath(messages.getDeliverOnDeath())
+            .deliveryMethod(messages.getDeliveryMethod()).scheduleType(messages.getScheduleType())
+            .deliveryDate(messages.getDeliveryDate()).eventTitle(messages.getEventTitle()).createdOn(messages.getCreatedOn()).build();
+
+        // Check is first message
+        Optional<Users> user = usersRepository.findById(messages.getUserId());
+        if (user.isPresent()) {
+            switch (messages.getMessageType()) {
+                case LETTER -> {
+                    messagesResponseDto.setIsFirstMessage(!user.get().getIsFirstLetterCreated());
+                    if (!user.get().getIsFirstLetterCreated()) {
+                        user.get().setIsFirstLetterCreated(true);
+                        usersRepository.save(user.get());
+                    }
+                }
+                case VIDEO -> {
+                    messagesResponseDto.setIsFirstMessage(!user.get().getIsFirstVideoCreated());
+                    if (!user.get().getIsFirstVideoCreated()) {
+                        user.get().setIsFirstVideoCreated(true);
+                        usersRepository.save(user.get());
+                    }
+                }
+                case AUDIO -> {
+                    messagesResponseDto.setIsFirstMessage(!user.get().getIsFirstAudioCreated());
+                    if (!user.get().getIsFirstAudioCreated()) {
+                        user.get().setIsFirstAudioCreated(true);
+                        usersRepository.save(user.get());
+                    }
+                }
+            }
+        }
+        return messagesResponseDto;
     }
 }
