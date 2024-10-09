@@ -121,6 +121,8 @@ public class MessagesServiceImpl implements MessagesService {
             Messenger messenger = messengerRepository.findById(messagesDto.getMessenger())
                 .orElseThrow(() -> new MessengerException("Messenger request not found"));
             messages.setMessenger(messenger);
+        } else {
+            messages.setMessenger(null);
         }
         if (messagesDto.getRecipient() != null) {
             if (messagesDto.getRecipient().getId() == null) {
