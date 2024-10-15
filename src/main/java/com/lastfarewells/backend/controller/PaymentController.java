@@ -2,8 +2,6 @@ package com.lastfarewells.backend.controller;
 
 import com.lastfarewells.backend.dto.PaymentDto;
 import com.lastfarewells.backend.dto.PaymentLinkDto;
-import com.lastfarewells.backend.entity.MessageTypeEnum;
-import com.lastfarewells.backend.entity.Messages;
 import com.lastfarewells.backend.entity.Payment;
 import com.lastfarewells.backend.entity.PaymentLink;
 import com.lastfarewells.backend.service.PaymentService;
@@ -12,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +42,11 @@ public class PaymentController {
         return paymentService.updatePaymentLink(paymentLinkDto);
     }
 
+    @DeleteMapping("/link/user/{userId}")
+    public void deletePaymentLink(@PathVariable("userId") Long userId) {
+        paymentService.deletePaymentLink(userId);
+    }
+
     @PostMapping("")
     public Payment createPayment(@RequestBody @Valid PaymentDto paymentDto) {
         return paymentService.createPayment(paymentDto);
@@ -54,4 +58,10 @@ public class PaymentController {
         @RequestParam(defaultValue = "10") int size) {
         return paymentService.findAllPayments(PageRequest.of(page, size, Sort.by("id").descending()), userId);
     }
+
+    @GetMapping("")
+    public Payment findPaymentByCheckoutId(@RequestParam("checkoutId") String checkoutId) {
+        return paymentService.findPaymentByCheckoutId(checkoutId);
+    }
+
 }

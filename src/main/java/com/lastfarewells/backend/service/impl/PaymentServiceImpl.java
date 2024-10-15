@@ -8,7 +8,9 @@ import com.lastfarewells.backend.exception.PaymentException;
 import com.lastfarewells.backend.repository.PaymentLinkRepository;
 import com.lastfarewells.backend.repository.PaymentRepository;
 import com.lastfarewells.backend.service.PaymentService;
+import com.lastfarewells.backend.service.UserService;
 import java.time.Instant;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentLinkRepository paymentLinkRepository;
     private final PaymentRepository     paymentRepository;
     private final ModelMapper           modelMapper;
+    private final UserService userService;
 
     @Override
     public PaymentLink createPaymentLink(PaymentLinkDto paymentLinkDto) {
@@ -38,10 +41,13 @@ public class PaymentServiceImpl implements PaymentService {
             existingPaymentLink.get().setUpdatedOn(Instant.now());
             return paymentLinkRepository.save(existingPaymentLink.get());
         } else {*/
-        PaymentLink paymentLink = PaymentLink.builder()
-            .userId(paymentLinkDto.getUserId()).paymentLink(paymentLinkDto.getPaymentLink())
-            .paymentIntent(paymentLinkDto.getPaymentIntent()).build();
-        paymentLink.setCreatedOn(Instant.now());
+
+        PaymentLink paymentLink = paymentLinkRepository.findByUserId(paymentLinkDto.getUserId())
+            .orElse(PaymentLink.builder()
+                .userId(paymentLinkDto.getUserId()).createdOn(Instant.now()).build());
+        paymentLink.setPaymentLink(paymentLinkDto.getPaymentLink());
+        paymentLink.setPaymentIntent(paymentLinkDto.getPaymentIntent());
+        paymentLink.setUpdatedOn(Instant.now());
         log.info("Saving new paymentLink for userId {}", paymentLink.getUserId());
         return paymentLinkRepository.save(paymentLink);
         // }
@@ -70,16 +76,36 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public void deletePaymentLink(Long userId) {
+        Optional<PaymentLink> paymentLink = paymentLinkRepository.findByUserId(userId);
+        if (paymentLink.isPresent()) {
+            log.info("Deleting payment link for user: {}", userId);
+            paymentLinkRepository.deleteById(paymentLink.get().getId());
+        }
+    }
+
+    @Override
     public Payment createPayment(PaymentDto paymentDto) {
         Payment payment = modelMapper.map(paymentDto, Payment.class);
         payment.setCreatedOn(Instant.now());
         log.info("Saving payment for userId {}", payment.getUserId());
-        return paymentRepository.save(payment);
+        paymentRepository.save(payment);
+
+        // Upgrade user subscription
+        userService.updateSubscription(paymentDto.getUserId());
+
+        return payment;
     }
 
     @Override
     public Page<Payment> findAllPayments(PageRequest pageRequest, Long userId) {
         return paymentRepository.findAllByUserId(userId, pageRequest);
+    }
+
+    @Override
+    public Payment findPaymentByCheckoutId(String checkoutId) {
+        return paymentRepository.findByCheckoutId(checkoutId)
+            .orElseThrow(() -> new PaymentException("Payment not found"));
     }
 
 
