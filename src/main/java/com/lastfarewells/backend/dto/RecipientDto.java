@@ -1,5 +1,7 @@
 package com.lastfarewells.backend.dto;
 
+import com.lastfarewells.backend.entity.RelationShipEnum;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,4 +24,7 @@ public class RecipientDto {
 	@Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Invalid email")
 	private String email;
 	private Long userId;
+	@NotNull(message = "relationShip cannot be null")
+	private RelationShipEnum relationShip;
+	
 }

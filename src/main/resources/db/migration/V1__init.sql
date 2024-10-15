@@ -274,3 +274,10 @@ ALTER TABLE death_report
 ADD COLUMN declined_at TIMESTAMP;
 ALTER TABLE death_report
 ADD COLUMN decline_reason TEXT;
+
+ALTER TABLE recipient 
+ADD COLUMN relation_ship VARCHAR(50);
+
+
+
+

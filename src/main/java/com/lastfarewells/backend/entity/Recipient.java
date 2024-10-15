@@ -1,12 +1,15 @@
 package com.lastfarewells.backend.entity;
 
+import java.time.Instant;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,4 +42,8 @@ public class Recipient {
     private Instant updatedOn;
     @Column(name = "is_user_recipient")
     private Boolean isUserRecipient;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "relation_ship")
+    private RelationShipEnum  relationShip;
 }
