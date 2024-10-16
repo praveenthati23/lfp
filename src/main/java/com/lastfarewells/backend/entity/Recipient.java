@@ -4,8 +4,6 @@ import java.time.Instant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,7 +41,6 @@ public class Recipient {
     @Column(name = "is_user_recipient")
     private Boolean isUserRecipient;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "relation_ship")
-    private RelationShipEnum  relationShip;
+    @Column(name = "relationship")
+    private String  relationship;
 }

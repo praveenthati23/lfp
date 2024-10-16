@@ -1,6 +1,13 @@
 package com.lastfarewells.backend.entity;
 
-public enum RelationShipEnum {
-	CHILD, FRIEND, PARENT, PARTNER_SPOUSE, SIBLING, OTHER
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@AllArgsConstructor
+@Getter
+public enum RelationShipEnum {
+	CHILD("Child"), FRIEND("Friend"), PARENT("Parent"), PARTNER_SPOUSE("Partner/Spouse"), SIBLING("Sibling"),
+	OTHER("Other");
+
+	private final String value;
 }

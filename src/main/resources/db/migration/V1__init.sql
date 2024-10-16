@@ -276,7 +276,7 @@ ALTER TABLE death_report
 ADD COLUMN decline_reason TEXT;
 
 ALTER TABLE recipient 
-ADD COLUMN relation_ship VARCHAR(50);
+ADD COLUMN relationship VARCHAR(50);
 
 
 
