@@ -66,7 +66,7 @@ public class MessagesServiceImpl implements MessagesService {
                         .userId(messagesDto.getUserId()).firstName(messagesDto.getRecipient().getFirstName())
                         .lastName(messagesDto.getRecipient().getLastName())
                         .email(messagesDto.getRecipient().getEmail()).createdOn(Instant.now())
-                        .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).build();
+                        .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).relationship(messagesDto.getRecipient().getRelationship()).build();
             messages.setRecipient(recipientRepository.save(recipient));
         } else if (messagesDto.getRecipient() != null && messagesDto.getStatus().equals(MessageStatusEnum.DRAFT)) {
             messages.setRecipient(recipientRepository.save(Recipient.builder()
@@ -131,7 +131,7 @@ public class MessagesServiceImpl implements MessagesService {
                     .userId(messagesDto.getUserId()).firstName(messagesDto.getRecipient().getFirstName())
                     .lastName(messagesDto.getRecipient().getLastName())
                     .email(messagesDto.getRecipient().getEmail()).createdOn(Instant.now())
-                    .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).build()));
+                    .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).relationship(messagesDto.getRecipient().getRelationship()).build()));
             }
             Recipient recipient = messages.getRecipient();
             if (messages.getRecipient().getId().equals(messagesDto.getRecipient().getId())) {
@@ -146,6 +146,9 @@ public class MessagesServiceImpl implements MessagesService {
                 }
                 if (messagesDto.getRecipient().getIsUserRecipient() != null) {
                     recipient.setIsUserRecipient(messagesDto.getRecipient().getIsUserRecipient());
+                }
+                if (StringUtils.isNotEmpty(messagesDto.getRecipient().getRelationship())) {
+                    recipient.setRelationship(messagesDto.getRecipient().getRelationship());
                 }
 
                 recipient.setUpdatedOn(Instant.now());

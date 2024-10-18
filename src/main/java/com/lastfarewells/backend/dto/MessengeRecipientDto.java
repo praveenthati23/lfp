@@ -16,4 +16,5 @@ public class MessengeRecipientDto {
     private String lastName;
     private String email;
     private Boolean isUserRecipient;
+    private String  relationship;
 }
