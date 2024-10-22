@@ -28,60 +28,64 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+	private final UserService userService;
 
-    /* @PostMapping("/register")
-     public Users registerUser(@RequestBody @Valid RegisterUserDto registerUserDto) {
-         return userService.registerUser(registerUserDto);
-     }
- */
-    @PostMapping("/auth/signup")
-    public void signUp(@RequestBody @Valid SignupDto signupDto) {
-        userService.registerUser(signupDto);
-    }
+	/*
+	 * @PostMapping("/register") public Users registerUser(@RequestBody @Valid
+	 * RegisterUserDto registerUserDto) { return
+	 * userService.registerUser(registerUserDto); }
+	 */
+	@PostMapping("/auth/signup")
+	public void signUp(@RequestBody @Valid SignupDto signupDto) {
+		userService.registerUser(signupDto);
+	}
 
+	@PostMapping("/auth/login")
+	public UserAccessTokenDto login(@RequestBody @Valid LoginDto loginDto) {
+		return userService.authenticateUser(loginDto);
+	}
 
-    @PostMapping("/auth/login")
-    public UserAccessTokenDto login(@RequestBody @Valid LoginDto loginDto) {
-        return userService.authenticateUser(loginDto);
-    }
+	@GetMapping("/auth/forgot-password")
+	public String forgotPassword(@RequestParam("email") String email) {
+		userService.forgotPassword(email);
+		return "Successfully sent reset-password link!!";
+	}
 
-    @GetMapping("/auth/forgot-password")
-    public String forgotPassword(@RequestParam("email") String email) {
-        userService.forgotPassword(email);
-        return "Successfully sent reset-password link!!";
-    }
+	@PutMapping("/auth/reset-password")
+	public String resetUserPassword(@RequestBody @Valid PasswordResetDto passwordResetDto) {
+		userService.resetUserPassword(passwordResetDto);
+		return "Password successfully reset!";
+	}
 
-    @PutMapping("/auth/reset-password")
-    public String resetUserPassword(@RequestBody @Valid PasswordResetDto passwordResetDto) {
-        userService.resetUserPassword(passwordResetDto);
-        return "Password successfully reset!";
-    }
+	@PutMapping("/auth/verify-email")
+	public String verifyEmail(@RequestBody @Valid VerifyEmailDto verifyEmailDto) {
+		userService.verifyEmail(verifyEmailDto);
+		return "Thank you for signing up with Last Farewells, your account has been verified.";
+	}
 
-    @PutMapping("/auth/verify-email")
-    public String verifyEmail(@RequestBody @Valid VerifyEmailDto verifyEmailDto) {
-        userService.verifyEmail(verifyEmailDto);
-        return "Thank you for signing up with Last Farewells, your account has been verified.";
-    }
+	@GetMapping("/user/me")
+	public UserDetailsDto getUser() {
+		return userService.getUser();
+	}
 
-    @GetMapping("/user/me")
-    public UserDetailsDto getUser() {
-        return userService.getUser();
-    }
+	@PutMapping("/{id}")
+	public Users updateUser(@PathVariable Long id, @RequestBody UpdateUserDto updateUserDto) {
+		return userService.updateUser(id, updateUserDto);
+	}
 
-    @PutMapping("/{id}")
-    public Users updateUser(@PathVariable Long id, @RequestBody UpdateUserDto updateUserDto) {
-        return userService.updateUser(id, updateUserDto);
-    }
-    
-    @PutMapping("/user/update-password")
-    public String updateUserPassword(@RequestBody @Valid UpdatePasswordDto updatePasswordDto) {
-        userService.updateUserPassword(updatePasswordDto);
-        return "Password successfully updated!";
-    }
+	@PutMapping("/user/update-password")
+	public String updateUserPassword(@RequestBody @Valid UpdatePasswordDto updatePasswordDto) {
+		userService.updateUserPassword(updatePasswordDto);
+		return "Password successfully updated!";
+	}
 
-    @PostMapping("/auth/verify-reset-token")
-    public String verifyResetToken(@RequestBody @Valid VerifyEmailDto verifyEmailDto) {
-        return userService.verifyResetToken(verifyEmailDto);
-    }
+	@PostMapping("/auth/verify-reset-token")
+	public String verifyResetToken(@RequestBody @Valid VerifyEmailDto verifyEmailDto) {
+		return userService.verifyResetToken(verifyEmailDto);
+	}
+
+	@PutMapping("/walkthrough/count/{id}")
+	public Integer walkthroughCountIncrement(@PathVariable Long id) {
+		return userService.walkthroughCountIncrement(id);
+	}
 }

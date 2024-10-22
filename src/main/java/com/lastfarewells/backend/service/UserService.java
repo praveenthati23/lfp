@@ -32,4 +32,6 @@ public interface UserService {
     String verifyResetToken(VerifyEmailDto verifyEmailDto);
 
     Users updateSubscription(Long id);
+
+	Integer walkthroughCountIncrement(Long id);
 }

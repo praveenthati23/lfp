@@ -278,6 +278,11 @@ ADD COLUMN decline_reason TEXT;
 ALTER TABLE recipient 
 ADD COLUMN relationship VARCHAR(50);
 
+ALTER TABLE Users 
+ADD COLUMN walkthrough_count INT DEFAULT 0;
+
+
+
 
 
 

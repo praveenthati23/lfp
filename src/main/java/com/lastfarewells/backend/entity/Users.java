@@ -104,5 +104,8 @@ public class Users {
 
     @Column(name = "subscription_id")
     private Long subscriptionId;
+    
+    @Column(name = "walkthrough_count")
+    private Integer walkthroughCount;
 
 }
