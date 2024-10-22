@@ -49,5 +49,6 @@ public class UserDetailsDto {
 
     private SubscriptionDto subscription;
     private MessageCountDto messagesCount;
+    private Integer walkthroughCount;
 
 }
