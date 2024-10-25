@@ -38,8 +38,10 @@ public class RecipientServiceImpl implements RecipientService {
 
 		Recipient recipient = Recipient.builder().firstName(recipientDto.getFirstName())
 				.lastName(recipientDto.getLastName()).email(recipientDto.getEmail()).isUserRecipient(true)
-				.relationship(recipientDto.getRelationship().getValue())
 				.userId(recipientDto.getUserId()).createdOn(Instant.now()).updatedOn(Instant.now()).build();
+
+		if (recipientDto.getRelationship() != null)
+			recipient.setRelationship(recipientDto.getRelationship().getValue());
 
 		recipientRepository.save(recipient);
 		return recipient;
@@ -63,7 +65,8 @@ public class RecipientServiceImpl implements RecipientService {
 		recipient.setFirstName(recipientDto.getFirstName());
 		recipient.setLastName(recipientDto.getLastName());
 		recipient.setEmail(recipientDto.getEmail());
-		recipient.setRelationship(recipientDto.getRelationship().getValue());
+		if (recipientDto.getRelationship() != null)
+			recipient.setRelationship(recipientDto.getRelationship().getValue());
 		recipientRepository.save(recipient);
 		return LFareWellConstants.RECIPIENT_UPDATE_SUCCESS_MSG;
 	}
