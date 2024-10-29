@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
 		Boolean isEmailVerified = (Boolean) JWTUtils.decodeJWT(accessTokenResponse.getToken()).getPayload()
 				.toJSONObject().get("email_verified");
 		if (isEmailVerified == null || !isEmailVerified) {
-			throw new UserAuthenticationException("User's email is not verified!!");
+			throw new UserAuthenticationException("User's email is not verified!.Please verify your email to log in.");
 		}
 		if (!user.getEmailVerified() && isEmailVerified) {
 			user.setEmailVerified(true);
