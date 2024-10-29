@@ -77,7 +77,7 @@ public class KeycloakServiceImpl implements IAMService {
             return keycloak.tokenManager().getAccessToken();
         } catch (BadRequestException | NotAuthorizedException ex) {
             log.error("Keycloak Login failed!!, User login failed, invalid account", ex);
-            throw new IAMException("Invalid credentials");
+            throw new IAMException("Invalid email or password, please try again.");
         }
     }
 
