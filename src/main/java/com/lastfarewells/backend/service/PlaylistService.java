@@ -1,5 +1,7 @@
 package com.lastfarewells.backend.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.lastfarewells.backend.dto.PlayListDto;
@@ -16,5 +18,7 @@ public interface PlaylistService {
 	Page<PlayListDto> getPlayList(Long userId, int page, int size);
 
 	String deletePlaylist(Long id);
+
+	List<PlayListDto> reorder(int fromIndex, int toIndex, Long userId);
 
 }

@@ -1,10 +1,13 @@
 package com.lastfarewells.backend.service.impl;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -59,6 +62,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 				.getAuthentication();
 		String userEmail = authentication.getTokenAttributes().get("email").toString();
 		Users user = usersRepo.findByEmail(userEmail).get();
+		int playListSize = playListRepository.countByUserId(user.getId());
 		try {
 			JsonNode jsonNode = objectMapper.readTree(playlist);
 			String id = jsonNode.get(LFareWellConstants.ID).asText();
@@ -71,7 +75,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 					.toPrettyString();
 			PlayList playListObj = PlayList.builder().userId(user.getId()).name(name).externalId(id).imageUrl(imageStr)
 					.artistName(artistName).previewUrl(previewUrl).durationMs(durationMs).createdOn(Instant.now())
-					.updatedOn(Instant.now()).build();
+					.sortOrder(playListSize + 1).updatedOn(Instant.now()).build();
 			PlayList savedPlayList = playListRepository.save(playListObj);
 			return playListDtoMapper(savedPlayList);
 
@@ -87,7 +91,8 @@ public class PlaylistServiceImpl implements PlaylistService {
 			PlayListDto playlistDto = PlayListDto.builder().id(playListObj.getId()).name(playListObj.getName())
 					.userId(playListObj.getUserId()).externalId(playListObj.getExternalId())
 					.artistName(playListObj.getArtistName()).durationMs(playListObj.getDurationMs())
-					.previewUrl(playListObj.getPreviewUrl()).imageUrl(imageDto).build();
+					.sortOrder(playListObj.getSortOrder()).previewUrl(playListObj.getPreviewUrl()).imageUrl(imageDto)
+					.build();
 			return playlistDto;
 		} catch (Exception e) {
 			log.error("Exception while Playlistdto mapper: " + e.getMessage());
@@ -97,7 +102,8 @@ public class PlaylistServiceImpl implements PlaylistService {
 
 	@Override
 	public Page<PlayListDto> getPlayList(Long userId, int page, int size) {
-		Page<PlayListDto> playlists = playListRepository.findAllByUserId(PageRequest.of(page, size), userId)
+		Sort sort = Sort.by(Sort.Direction.ASC, "sortOrder");
+		Page<PlayListDto> playlists = playListRepository.findAllByUserId(PageRequest.of(page, size,sort), userId)
 				.map(entity -> {
 					PlayListDto dto = playListDtoMapper(entity);
 					return dto;
@@ -107,7 +113,52 @@ public class PlaylistServiceImpl implements PlaylistService {
 
 	@Override
 	public String deletePlaylist(Long id) {
+		JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext()
+				.getAuthentication();
+		String userEmail = authentication.getTokenAttributes().get("email").toString();
+		Users user = usersRepo.findByEmail(userEmail).get();
+		
 		playListRepository.deleteById(id);
-		return "Deleted PlayList id: "+id+" Successfully";
+		Sort sort = Sort.by(Sort.Direction.ASC, "sortOrder");
+		List<PlayList> playList = playListRepository.findAllByUserId(user.getId(), sort);
+		 for (int i = 0; i < playList.size(); i++) {
+			 playList.get(i).setSortOrder(i + 1); 
+	        }
+		 playListRepository.saveAll(playList);
+		return "Deleted PlayList id: " + id + " Successfully";
 	}
+
+	@Override
+	public List<PlayListDto> reorder(int fromIndex, int toIndex, Long userId) {
+		Sort sort = Sort.by(Sort.Direction.ASC, "sortOrder");
+		List<PlayList> playList = playListRepository.findAllByUserId(userId, sort);
+		if (fromIndex < 0 || toIndex < 0 || fromIndex >= playList.size() || toIndex >= playList.size()) {
+			throw new PlaylistException("Invalid fromIndex or toIndex");
+		}
+		if (fromIndex < toIndex) {
+			PlayList element = playList.get(fromIndex);
+			for (int i = fromIndex; i < toIndex; i++) {
+				playList.get(i + 1).setSortOrder(i+ 1);
+				playList.set(i, playList.get(i + 1));
+			}
+			element.setSortOrder(toIndex+1);
+			playList.set(toIndex, element);
+
+		} else if (fromIndex > toIndex) {
+			PlayList element = playList.get(fromIndex);
+			for (int i = fromIndex; i > toIndex; i--) {
+				playList.get(i - 1).setSortOrder(i+ 1);
+				playList.set(i, playList.get(i - 1));
+			}
+			element.setSortOrder(toIndex+1);
+			playList.set(toIndex, element);
+		}
+		playListRepository.saveAll(playList);
+		List<PlayListDto> reorderedList = new ArrayList<>();
+		for (PlayList obj : playList) {
+			reorderedList.add(playListDtoMapper(obj));
+		}
+		return reorderedList;
+	}
+
 }
