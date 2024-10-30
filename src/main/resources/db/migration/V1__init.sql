@@ -281,6 +281,9 @@ ADD COLUMN relationship VARCHAR(50);
 ALTER TABLE Users 
 ADD COLUMN walkthrough_count INT DEFAULT 0;
 
+ALTER TABLE playlists
+ADD COLUMN sort_order INT DEFAULT 1;
+
 
 
 

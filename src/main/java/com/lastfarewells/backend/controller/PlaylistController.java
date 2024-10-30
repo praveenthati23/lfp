@@ -1,5 +1,7 @@
 package com.lastfarewells.backend.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,11 @@ public class PlaylistController {
 		} catch (Exception ex) {
 			return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@PostMapping("reorder/{userId}")
+	public List<PlayListDto> reorder(@PathVariable Long userId, @RequestParam int fromIndex, @RequestParam int toIndex ) {
+		return playlistService.reorder(fromIndex,toIndex,userId);
 	}
 
 }

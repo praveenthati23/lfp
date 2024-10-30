@@ -19,6 +19,7 @@ public class PlayListDto {
 	private String artistName;
 	private Long durationMs;
 	private String previewUrl;
+	private Integer sortOrder;
 
 	@Data
 	@Builder

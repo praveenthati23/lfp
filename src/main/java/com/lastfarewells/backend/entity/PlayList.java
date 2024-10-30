@@ -44,5 +44,7 @@ public class PlayList {
 	private Instant createdOn;
 	@Column(name = "updated_on")
 	private Instant updatedOn;
+	@Column(name = "sort_order")
+	private Integer sortOrder;
 
 }
