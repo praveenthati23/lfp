@@ -2,8 +2,10 @@ package com.lastfarewells.backend.service.impl;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -103,7 +105,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 	@Override
 	public Page<PlayListDto> getPlayList(Long userId, int page, int size) {
 		Sort sort = Sort.by(Sort.Direction.ASC, "sortOrder");
-		Page<PlayListDto> playlists = playListRepository.findAllByUserId(PageRequest.of(page, size,sort), userId)
+		Page<PlayListDto> playlists = playListRepository.findAllByUserId(PageRequest.of(page, size, sort), userId)
 				.map(entity -> {
 					PlayListDto dto = playListDtoMapper(entity);
 					return dto;
@@ -121,39 +123,25 @@ public class PlaylistServiceImpl implements PlaylistService {
 		playListRepository.deleteById(id);
 		Sort sort = Sort.by(Sort.Direction.ASC, "sortOrder");
 		List<PlayList> playList = playListRepository.findAllByUserId(user.getId(), sort);
-		 for (int i = 0; i < playList.size(); i++) {
-			 playList.get(i).setSortOrder(i + 1); 
-	        }
-		 playListRepository.saveAll(playList);
+		for (int i = 0; i < playList.size(); i++) {
+			playList.get(i).setSortOrder(i + 1);
+		}
+		playListRepository.saveAll(playList);
 		return "Deleted PlayList id: " + id + " Successfully";
 	}
 
 	@Override
-	public List<PlayListDto> reorder(int fromIndex, int toIndex, Long userId) {
+	public List<PlayListDto> reorder(List<Long> ids, Long userId) {
 		Sort sort = Sort.by(Sort.Direction.ASC, "sortOrder");
 		List<PlayList> playList = playListRepository.findAllByUserId(userId, sort);
-		if (fromIndex < 0 || toIndex < 0 || fromIndex >= playList.size() || toIndex >= playList.size()) {
-			throw new PlaylistException("Invalid fromIndex or toIndex");
-		}
-		if (fromIndex < toIndex) {
-			PlayList element = playList.get(fromIndex);
-			for (int i = fromIndex; i < toIndex; i++) {
-				playList.get(i + 1).setSortOrder(i+ 1);
-				playList.set(i, playList.get(i + 1));
-			}
-			element.setSortOrder(toIndex+1);
-			playList.set(toIndex, element);
-
-		} else if (fromIndex > toIndex) {
-			PlayList element = playList.get(fromIndex);
-			for (int i = fromIndex; i > toIndex; i--) {
-				playList.get(i - 1).setSortOrder(i+ 1);
-				playList.set(i, playList.get(i - 1));
-			}
-			element.setSortOrder(toIndex+1);
-			playList.set(toIndex, element);
+		for (Long id : ids) {
+			playList.stream().filter(item -> item.getId().equals(id))
+					.forEach(item -> item.setSortOrder(ids.indexOf(id) + 1));
 		}
 		playListRepository.saveAll(playList);
+
+		playList = playList.stream().sorted(Comparator.comparingInt(PlayList::getSortOrder))
+				.collect(Collectors.toList());
 		List<PlayListDto> reorderedList = new ArrayList<>();
 		for (PlayList obj : playList) {
 			reorderedList.add(playListDtoMapper(obj));
