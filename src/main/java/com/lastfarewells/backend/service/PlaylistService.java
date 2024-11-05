@@ -19,6 +19,6 @@ public interface PlaylistService {
 
 	String deletePlaylist(Long id);
 
-	List<PlayListDto> reorder(int fromIndex, int toIndex, Long userId);
+	List<PlayListDto> reorder(List<Long> ids, Long userId);
 
 }

@@ -42,7 +42,7 @@ public class PlaylistController {
 
 	@GetMapping("/{userId}")
 	public Page<PlayListDto> getPlayList(@PathVariable Long userId, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size) {
+			@RequestParam(defaultValue = "100") int size) {
 		return playlistService.getPlayList(userId, page, size);
 	}
 
@@ -56,8 +56,8 @@ public class PlaylistController {
 	}
 	
 	@PostMapping("reorder/{userId}")
-	public List<PlayListDto> reorder(@PathVariable Long userId, @RequestParam int fromIndex, @RequestParam int toIndex ) {
-		return playlistService.reorder(fromIndex,toIndex,userId);
+	public List<PlayListDto> reorder(@PathVariable Long userId, @RequestParam List<Long> ids ) {
+		return playlistService.reorder(ids,userId);
 	}
 
 }
