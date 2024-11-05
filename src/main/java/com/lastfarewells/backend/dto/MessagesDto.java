@@ -36,5 +36,6 @@ public class MessagesDto {
     private ScheduleTypeEnum   scheduleType;
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Date               deliveryDate;
+    private Integer deliverYrsAfterDeath;
 
 }
