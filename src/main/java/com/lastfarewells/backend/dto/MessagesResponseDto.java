@@ -37,5 +37,6 @@ public class MessagesResponseDto {
     private Instant            createdOn;
     private Instant            updatedOn;
     private Boolean            isFirstMessage;
+    private Integer deliverYrsAfterDeath;
 
 }

@@ -76,6 +76,9 @@ public class Messages {
     @Column(name = "event_title")
     private String  eventTitle;
 
+    @Column(name = "deliver_yrs_after_death")
+    private Integer deliverYrsAfterDeath;
+
     @Column(name = "created_on")
     private Instant createdOn;
     @Column(name = "updated_on")

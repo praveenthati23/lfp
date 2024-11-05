@@ -284,6 +284,8 @@ ADD COLUMN walkthrough_count INT DEFAULT 0;
 ALTER TABLE playlists
 ADD COLUMN sort_order INT DEFAULT 1;
 
+ALTER TABLE Messages
+ADD COLUMN deliver_yrs_after_death;
 
 
 

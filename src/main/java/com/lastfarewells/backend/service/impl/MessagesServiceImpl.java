@@ -47,7 +47,8 @@ public class MessagesServiceImpl implements MessagesService {
             .content(messagesDto.getContent()).fileName(messagesDto.getFileName())
             .deliverOnDeath(messagesDto.getDeliverOnDeath()).deliveryMethod(messagesDto.getDeliveryMethod())
             .eventTitle(messagesDto.getEventTitle())
-            .scheduleType(messagesDto.getScheduleType()).deliveryDate(messagesDto.getDeliveryDate()).build();
+            .scheduleType(messagesDto.getScheduleType()).deliveryDate(messagesDto.getDeliveryDate())
+            .deliverYrsAfterDeath(messagesDto.getDeliverYrsAfterDeath()).build();
         if (messagesDto.getStatus() != null) {
             messages.setStatus(messagesDto.getStatus());
         } else {
@@ -197,7 +198,8 @@ public class MessagesServiceImpl implements MessagesService {
             .messageType(messages.getMessageType()).title(messages.getTitle()).description(messages.getDescription())
             .content(messages.getContent()).fileName(messages.getFileName()).deliverOnDeath(messages.getDeliverOnDeath())
             .deliveryMethod(messages.getDeliveryMethod()).scheduleType(messages.getScheduleType())
-            .deliveryDate(messages.getDeliveryDate()).eventTitle(messages.getEventTitle()).createdOn(messages.getCreatedOn()).build();
+            .deliveryDate(messages.getDeliveryDate()).eventTitle(messages.getEventTitle()).createdOn(messages.getCreatedOn())
+            .deliverYrsAfterDeath(messages.getDeliverYrsAfterDeath()).build();
 
         // Check is first message
         Optional<Users> user = usersRepository.findById(messages.getUserId());
