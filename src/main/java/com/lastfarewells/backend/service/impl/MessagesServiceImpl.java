@@ -117,6 +117,7 @@ public class MessagesServiceImpl implements MessagesService {
         messages.setScheduleType(messagesDto.getScheduleType());
         messages.setDeliveryDate(messagesDto.getDeliveryDate());
         messages.setEventTitle(messagesDto.getEventTitle());
+        messages.setDeliverYrsAfterDeath(messagesDto.getDeliverYrsAfterDeath());
         messages.setUpdatedOn(Instant.now());
         if (messagesDto.getMessenger() != null && !messagesDto.getMessenger().equals(messages.getMessenger())) {
             Messenger messenger = messengerRepository.findById(messagesDto.getMessenger())
