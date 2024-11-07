@@ -1,6 +1,7 @@
 package com.lastfarewells.backend.service;
 
 import com.lastfarewells.backend.dto.MemorialDto;
+import com.lastfarewells.backend.dto.PublicMemorialDto;
 import com.lastfarewells.backend.entity.Memorial;
 
 public interface MemorialService {
@@ -14,5 +15,7 @@ public interface MemorialService {
     void deleteMemorial(Long id);
 
     Boolean getUserMemorial(String alias);
+
+	PublicMemorialDto getPublicMemorials(String alias);
 
 }

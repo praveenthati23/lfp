@@ -27,6 +27,7 @@ import com.lastfarewells.backend.repository.PlayListRepository;
 import com.lastfarewells.backend.repository.UsersRepository;
 import com.lastfarewells.backend.service.PlaylistService;
 
+import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -147,6 +148,20 @@ public class PlaylistServiceImpl implements PlaylistService {
 			reorderedList.add(playListDtoMapper(obj));
 		}
 		return reorderedList;
+	}
+
+	@Override
+	public List<PlayListDto> getPublicPlayList(Long userId) {
+		List<PlayListDto> playListDtoList = new ArrayList<>();
+		Sort sort = Sort.by(Sort.Direction.ASC, "sortOrder");
+		List<PlayList> playlists = playListRepository.findAllByUserId(userId, sort);
+		if (!Collections.isEmpty(playlists)) {
+			playListDtoList = playlists.stream().map(entity -> {
+				PlayListDto dto = playListDtoMapper(entity);
+				return dto;
+			}).collect(Collectors.toList());
+		}
+		return playListDtoList;
 	}
 
 }

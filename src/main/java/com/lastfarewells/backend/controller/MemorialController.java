@@ -1,14 +1,8 @@
 package com.lastfarewells.backend.controller;
 
-import com.lastfarewells.backend.dto.MemorialDto;
-import com.lastfarewells.backend.dto.MessagesDto;
-import com.lastfarewells.backend.entity.Memorial;
-import com.lastfarewells.backend.entity.Messages;
-import com.lastfarewells.backend.service.MemorialService;
-import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.AllArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.lastfarewells.backend.dto.MemorialDto;
+import com.lastfarewells.backend.dto.PublicMemorialDto;
+import com.lastfarewells.backend.entity.Memorial;
+import com.lastfarewells.backend.service.MemorialService;
+
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/memorial")
@@ -53,4 +55,12 @@ public class MemorialController {
         response.put("isAliasAvailable", memorialService.getUserMemorial(alias));
         return ResponseEntity.ok(response);
     }
+    
+    @GetMapping("/public/memorials")
+    public ResponseEntity<PublicMemorialDto> getPublicMemorials(@RequestParam("alias") String alias) {
+    		PublicMemorialDto response = memorialService.getPublicMemorials(alias);
+    		 return  ResponseEntity.ok(response);
+       
+    }
+
 }
