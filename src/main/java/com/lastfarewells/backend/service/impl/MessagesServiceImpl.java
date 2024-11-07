@@ -102,63 +102,64 @@ public class MessagesServiceImpl implements MessagesService {
             .orElseThrow(() -> new MessengesException("Message request not found"));
         log.info("Updating Message {} for user {}", id, messages.getUserId());
 
-        if (messagesDto.getStatus() != null) {
-            messages.setStatus(messagesDto.getStatus());
-        }
-        messages.setTitle(messagesDto.getTitle());
-        messages.setDescription(messagesDto.getDescription());
-        messages.setFileName(messagesDto.getFileName());
-        messages.setContent(messagesDto.getContent());
-        messages.setDeliverOnDeath(messagesDto.getDeliverOnDeath());
-        messages.setDeliveryMethod(messagesDto.getDeliveryMethod());
-        if (messages.getDeliveryMethod() == null) {
-            messages.setDeliveryMethod(DeliveryMethodEnum.EMAIL);
-        }
-        messages.setScheduleType(messagesDto.getScheduleType());
-        messages.setDeliveryDate(messagesDto.getDeliveryDate());
-        messages.setEventTitle(messagesDto.getEventTitle());
-        messages.setDeliverYrsAfterDeath(messagesDto.getDeliverYrsAfterDeath());
-        messages.setUpdatedOn(Instant.now());
-        if (messagesDto.getMessenger() != null && !messagesDto.getMessenger().equals(messages.getMessenger())) {
-            Messenger messenger = messengerRepository.findById(messagesDto.getMessenger())
-                .orElseThrow(() -> new MessengerException("Messenger request not found"));
-            messages.setMessenger(messenger);
-        } else {
-            messages.setMessenger(null);
-        }
-        if (messagesDto.getRecipient() != null) {
-            if (messagesDto.getRecipient().getId() == null) {
-                // save a new recipient
-                messages.setRecipient(recipientRepository.save(Recipient.builder()
-                    .userId(messagesDto.getUserId()).firstName(messagesDto.getRecipient().getFirstName())
-                    .lastName(messagesDto.getRecipient().getLastName())
-                    .email(messagesDto.getRecipient().getEmail()).createdOn(Instant.now())
-                    .isUserRecipient(messagesDto.getRecipient().getIsUserRecipient()).relationship(messagesDto.getRecipient().getRelationship()).build()));
-            }
-            Recipient recipient = messages.getRecipient();
-            if (messages.getRecipient().getId().equals(messagesDto.getRecipient().getId())) {
-                if (StringUtils.isNotEmpty(messagesDto.getRecipient().getFirstName())) {
-                    recipient.setFirstName(messagesDto.getRecipient().getFirstName());
-                }
-                if (StringUtils.isNotEmpty(messagesDto.getRecipient().getLastName())) {
-                    recipient.setLastName(messagesDto.getRecipient().getLastName());
-                }
-                if (StringUtils.isNotEmpty(messagesDto.getRecipient().getEmail())) {
-                    recipient.setEmail(messagesDto.getRecipient().getEmail());
-                }
-                if (messagesDto.getRecipient().getIsUserRecipient() != null) {
-                    recipient.setIsUserRecipient(messagesDto.getRecipient().getIsUserRecipient());
-                }
-                if (StringUtils.isNotEmpty(messagesDto.getRecipient().getRelationship())) {
-                    recipient.setRelationship(messagesDto.getRecipient().getRelationship());
-                }
+		if (messagesDto.getStatus() != null) {
+			messages.setStatus(messagesDto.getStatus());
+		}
+		messages.setTitle(messagesDto.getTitle());
+		messages.setDescription(messagesDto.getDescription());
+		messages.setFileName(messagesDto.getFileName());
+		messages.setContent(messagesDto.getContent());
+		messages.setDeliverOnDeath(messagesDto.getDeliverOnDeath());
+		messages.setDeliveryMethod(messagesDto.getDeliveryMethod());
+		if (messages.getDeliveryMethod() == null) {
+			messages.setDeliveryMethod(DeliveryMethodEnum.EMAIL);
+		}
+		messages.setScheduleType(messagesDto.getScheduleType());
+		messages.setDeliveryDate(messagesDto.getDeliveryDate());
+		messages.setEventTitle(messagesDto.getEventTitle());
+		messages.setDeliverYrsAfterDeath(messagesDto.getDeliverYrsAfterDeath());
+		messages.setUpdatedOn(Instant.now());
+		if (messagesDto.getMessenger() != null && !messagesDto.getMessenger().equals(messages.getMessenger())) {
+			Messenger messenger = messengerRepository.findById(messagesDto.getMessenger())
+					.orElseThrow(() -> new MessengerException("Messenger request not found"));
+			messages.setMessenger(messenger);
+		} else {
+			messages.setMessenger(null);
+		}
+		if (messagesDto.getRecipient() != null) {
+			if (messagesDto.getRecipient().getId() == null) {
+				// save a new recipient
+				messages.setRecipient(recipientRepository.save(Recipient.builder().userId(messagesDto.getUserId())
+						.firstName(messagesDto.getRecipient().getFirstName())
+						.lastName(messagesDto.getRecipient().getLastName()).email(messagesDto.getRecipient().getEmail())
+						.createdOn(Instant.now()).isUserRecipient(messagesDto.getRecipient().getIsUserRecipient())
+						.relationship(messagesDto.getRecipient().getRelationship()).build()));
+			} else {
+				Recipient recipient = messages.getRecipient();
+				if (messages.getRecipient().getId().equals(messagesDto.getRecipient().getId())) {
+					if (StringUtils.isNotEmpty(messagesDto.getRecipient().getFirstName())) {
+						recipient.setFirstName(messagesDto.getRecipient().getFirstName());
+					}
+					if (StringUtils.isNotEmpty(messagesDto.getRecipient().getLastName())) {
+						recipient.setLastName(messagesDto.getRecipient().getLastName());
+					}
+					if (StringUtils.isNotEmpty(messagesDto.getRecipient().getEmail())) {
+						recipient.setEmail(messagesDto.getRecipient().getEmail());
+					}
+					if (messagesDto.getRecipient().getIsUserRecipient() != null) {
+						recipient.setIsUserRecipient(messagesDto.getRecipient().getIsUserRecipient());
+					}
+					if (StringUtils.isNotEmpty(messagesDto.getRecipient().getRelationship())) {
+						recipient.setRelationship(messagesDto.getRecipient().getRelationship());
+					}
 
-                recipient.setUpdatedOn(Instant.now());
-                messages.setRecipient(recipientRepository.save(recipient));
-            } else {
-                messages.setRecipient(recipientRepository.findById(messagesDto.getRecipient().getId())
-                    .orElseThrow(() -> new MessengesException("Invalid recipient")));
-            }
+					recipient.setUpdatedOn(Instant.now());
+					messages.setRecipient(recipientRepository.save(recipient));
+				} else {
+					messages.setRecipient(recipientRepository.findById(messagesDto.getRecipient().getId())
+							.orElseThrow(() -> new MessengesException("Invalid recipient")));
+				}
+			}
 
         }
         return messagesRepository.save(messages);
