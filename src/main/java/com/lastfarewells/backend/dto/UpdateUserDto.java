@@ -28,6 +28,7 @@ public class UpdateUserDto {
     private AddressDto birthAddress;
 
     private String contactNumber;
+    private String countryCode;
     private String secondaryEmail;
 
 }

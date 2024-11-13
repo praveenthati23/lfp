@@ -41,6 +41,7 @@ public class ModelMapperConfig {
                 when(notNull).map().setDeathDate(source.getDeathDate());
                 when(notNull).map().setSecondaryEmail(source.getSecondaryEmail());
                 when(notNull).map().setContactNumber(source.getContactNumber());
+                when(notNull).map().setCountryCode(source.getCountryCode());
                 when(notNull).map().getAddress().setCity(source.getAddress().getCity());
                 when(notNull).map().getAddress().setAddress(source.getAddress().getAddress());
                 when(notNull).map().getAddress().setCountryId(source.getAddress().getCountryId());

@@ -107,5 +107,8 @@ public class Users {
     
     @Column(name = "walkthrough_count")
     private Integer walkthroughCount;
+    
+    @Column(name = "country_code")
+    private String countryCode;
 
 }
