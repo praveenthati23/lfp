@@ -287,6 +287,9 @@ ADD COLUMN sort_order INT DEFAULT 1;
 ALTER TABLE Messages
 ADD COLUMN deliver_yrs_after_death INT;
 
+ALTER TABLE Users
+ADD COLUMN country_code VARCHAR(20);
+
 
 
 
