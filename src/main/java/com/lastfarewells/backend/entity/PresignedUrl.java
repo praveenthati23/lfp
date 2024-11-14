@@ -44,5 +44,7 @@ public class PresignedUrl {
 	private Instant createdAt;
 	@Column(name = "modified_at")
 	private Instant modifiedAt;
+	@Column(name = "duration")
+	private Double duration;
 
 }
