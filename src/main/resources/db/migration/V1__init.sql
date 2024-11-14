@@ -290,6 +290,7 @@ ADD COLUMN deliver_yrs_after_death INT;
 ALTER TABLE Users
 ADD COLUMN country_code VARCHAR(20);
 
+
 ALTER TABLE presigned_url_tbl
 ADD COLUMN duration double precision;
 
