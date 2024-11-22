@@ -294,6 +294,13 @@ ADD COLUMN country_code VARCHAR(20);
 ALTER TABLE presigned_url_tbl
 ADD COLUMN duration double precision;
 
+ALTER TABLE presigned_url_tbl
+ALTER duration SET DEFAULT 0.0;
+
+UPDATE presigned_url_tbl 
+SET duration = 0.0
+WHERE duration is NULL;
+
 
 
 
