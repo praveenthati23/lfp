@@ -136,7 +136,7 @@ public class MessagesServiceImpl implements MessagesService {
 						.relationship(messagesDto.getRecipient().getRelationship()).build()));
 			} else {
 				Recipient recipient = messages.getRecipient();
-				if (messages.getRecipient().getId().equals(messagesDto.getRecipient().getId())) {
+				if (messages.getRecipient()!=null && messages.getRecipient().getId().equals(messagesDto.getRecipient().getId())) {
 					if (StringUtils.isNotEmpty(messagesDto.getRecipient().getFirstName())) {
 						recipient.setFirstName(messagesDto.getRecipient().getFirstName());
 					}
