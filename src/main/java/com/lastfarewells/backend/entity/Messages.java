@@ -88,8 +88,8 @@ public class Messages {
     private Instant createdOn;
     @Column(name = "updated_on")
     private Instant updatedOn;
-    
     @Column(name = "recipient_id",insertable=false, updatable=false)
     private Long recipientId;
     
+
 }
