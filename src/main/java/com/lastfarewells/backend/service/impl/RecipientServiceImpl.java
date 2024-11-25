@@ -1,18 +1,21 @@
 package com.lastfarewells.backend.service.impl;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.lastfarewells.backend.constants.LFareWellConstants;
 import com.lastfarewells.backend.dto.RecipientDto;
+import com.lastfarewells.backend.entity.Messages;
 import com.lastfarewells.backend.entity.Recipient;
 import com.lastfarewells.backend.exception.RecipientException;
+import com.lastfarewells.backend.repository.MessagesRepository;
 import com.lastfarewells.backend.repository.RecipientRepository;
-import com.lastfarewells.backend.repository.UsersRepository;
 import com.lastfarewells.backend.service.RecipientService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RecipientServiceImpl implements RecipientService {
 
 	private final RecipientRepository recipientRepository;
-	private final UsersRepository userRepository;
+	private final MessagesRepository messagesRepository;
 
 	@Override
 	public Recipient createRecipient(RecipientDto recipientDto) {
@@ -81,7 +84,15 @@ public class RecipientServiceImpl implements RecipientService {
 	public String deleteRecipient(Long id) {
 
 		log.info("delete the Recipient: " + id);
-		recipientRepository.deleteById(id);
+		List<Messages> messages = messagesRepository.findByRecipientId(id);
+		if (!CollectionUtils.isEmpty(messages)) {
+			Recipient recipient = recipientRepository.findById(id)
+					.orElseThrow(() -> new RecipientException(LFareWellConstants.RECIPIENT_INVALID_MSG));
+			recipient.setIsUserRecipient(false);
+			recipientRepository.save(recipient);
+		} else {
+			recipientRepository.deleteById(id);
+		}
 		return LFareWellConstants.RECIPIENT_UPDATE_DELETE_MSG;
 
 	}
