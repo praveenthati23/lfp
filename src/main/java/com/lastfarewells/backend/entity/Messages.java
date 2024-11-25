@@ -1,6 +1,13 @@
 package com.lastfarewells.backend.entity;
 
+import java.time.Instant;
+import java.util.Date;
+
+import org.hibernate.Hibernate;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,8 +19,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.Instant;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -84,4 +89,14 @@ public class Messages {
     @Column(name = "updated_on")
     private Instant updatedOn;
 
+    
+    @JsonProperty("recipient")
+    public Recipient getRecipientSafe() {
+        return Hibernate.isInitialized(this.recipient) ? this.recipient : null;
+    }
+    
+    @JsonProperty("messenger")
+    public Messenger getMessengerSafe() {
+        return Hibernate.isInitialized(this.messenger) ? this.messenger : null;
+    }
 }
