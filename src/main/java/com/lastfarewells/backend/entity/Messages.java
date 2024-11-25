@@ -88,15 +88,8 @@ public class Messages {
     private Instant createdOn;
     @Column(name = "updated_on")
     private Instant updatedOn;
+    @Column(name = "recipient_id",insertable=false, updatable=false)
+    private Long recipientId;
+    
 
-    
-    @JsonProperty("recipient")
-    public Recipient getRecipientSafe() {
-        return Hibernate.isInitialized(this.recipient) ? this.recipient : null;
-    }
-    
-    @JsonProperty("messenger")
-    public Messenger getMessengerSafe() {
-        return Hibernate.isInitialized(this.messenger) ? this.messenger : null;
-    }
 }
