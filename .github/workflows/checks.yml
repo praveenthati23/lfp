@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - playlist_recorder
+      
 #on:
 #  workflow_dispatch:
 #    # Inputs the workflow accepts.
