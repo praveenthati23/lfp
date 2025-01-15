@@ -3,7 +3,7 @@ name: Pull Request Checks
 on:
   pull_request:
     branches:
-      - playlist_recorder  # Trigger on every commit to the playlist_recorder branch
+      - playlist_reorder  # Trigger on every commit to the playlist_recorder branch
 
 
 permissions:
