@@ -1,31 +1,25 @@
 name: Push Request Checks
+
 on:
   push:
     branches:
-      - playlist_recorder      
-#on:
-#  workflow_dispatch:
-#    # Inputs the workflow accepts.
-#    inputs:
-#      name:
-#        # Friendly description to be shown in the UI instead of 'name'
-#        description: 'test run for code analysis'
-#        # Default value if no value is explicitly provided
-#        default: 'test'
+      - playlist_recorder  # Trigger on every commit to the playlist_recorder branch
+
 permissions:
-  id-token: write # This is required for requesting the JWT
+  id-token: write  # This is required for requesting the JWT
   security-events: write
   contents: read
-  actions: read # This is required for actions/checkout
+  actions: read  # This is required for actions/checkout
   issues: write
   pull-requests: write
-  checks: write # needed for spotbugs
+  checks: write  # needed for spotbugs
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3  # Check out the repository
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
@@ -40,7 +34,7 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Run tests
         run: mvn
-      - name: Run SpotBugs, PMD and checkstyle
+      - name: Run SpotBugs, PMD, and checkstyle
         run: mvn verify spotbugs:spotbugs pmd:pmd
       - uses: jwgmeligmeyling/spotbugs-github-action@master
         with:
