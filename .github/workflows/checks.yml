@@ -6,7 +6,7 @@ on:
       - playlist_reorder
 
 env:
-  MVN_OPS: -DGIT_USER_NAME=${{ secrets.GIT_USER_NAME }} -DGIT_TOKEN=${{ secrets.GIT_TOKEN }} -s settings.xml
+  MVN_OPS: -DGIT_USER_NAME=${{ secrets.GIT_USER_NAME }} -DGIT_TOKEN=${{ secrets.GIT_TOKEN }}
 
 permissions:
   id-token: write
