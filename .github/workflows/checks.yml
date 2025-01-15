@@ -3,8 +3,10 @@ name: Pull Request Checks
 on:
   pull_request:
     branches:
-      - playlist_reorder
+      - trunk
 
+env:
+  MVN_OPS: -DGIT_USER_NAME=${{ secrets.GIT_USER_NAME }} -DGIT_TOKEN=${{ secrets.GIT_TOKEN }} -s settings.xml
 
 permissions:
   id-token: write
@@ -20,17 +22,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository code
       - uses: actions/checkout@v3
-
-      # Set up JDK 21
-      - name: Set up JDK 21
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '21'
+          java-version: '17'
           distribution: 'temurin'
-
-      # Cache Maven dependencies to speed up builds
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -38,30 +35,20 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
-      # Run tests with Maven
+      - name: Build and Install with Maven
+        run: mvn clean install -U $MVN_OPS
       - name: Run tests
         run: mvn $MVN_OPS test
-
-      # Run SpotBugs, PMD, and Checkstyle
-      - name: Run SpotBugs, PMD, and Checkstyle
+      - name: Run SpotBugs, PMD and checkstyle
         run: mvn $MVN_OPS -B verify spotbugs:spotbugs pmd:pmd
-
-      # Generate SpotBugs report
       - uses: jwgmeligmeyling/spotbugs-github-action@master
         with:
           path: '**/spotbugsXml.xml'
-
-      # Generate PMD report
       - uses: jwgmeligmeyling/pmd-github-action@master
         with:
           path: '**/pmd.xml'
-
-      # Generate code coverage report with JaCoCo
       - name: Generate code coverage
         run: mvn jacoco:report
-
-      # Generate JaCoCo Badge
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
         with:
@@ -71,10 +58,3 @@ jobs:
           generate-summary: false
           summary-filename: coverage-summary.json
           workflow-summary-heading: JaCoCo Test Coverage Summary
-
-      # Upload code coverage badge to GitHub
-      - name: Upload JaCoCo Badge
-        uses: actions/upload-artifact@v3
-        with:
-          name: jacoco-badge
-          path: jacoco.svg
