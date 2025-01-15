@@ -3,7 +3,7 @@ name: Pull Request Checks
 on:
   pull_request:
     branches:
-      - trunk
+      - playlist_recorder
 
 env:
   MVN_OPS: -DGIT_USER_NAME=${{ secrets.GIT_USER_NAME }} -DGIT_TOKEN=${{ secrets.GIT_TOKEN }} -s settings.xml
