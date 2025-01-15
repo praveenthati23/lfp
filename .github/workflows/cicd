@@ -1,0 +1,55 @@
+name: Push Request Checks
+
+on:
+  push:
+    branches:
+      - playlist_recorder  # Trigger on every commit to the playlist_recorder branch
+
+permissions:
+  id-token: write  # This is required for requesting the JWT
+  security-events: write
+  contents: read
+  actions: read  # This is required for actions/checkout
+  issues: write
+  pull-requests: write
+  checks: write  # needed for spotbugs
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3  # Check out the repository
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: "21"
+          distribution: "temurin"
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Run tests
+        run: mvn
+      - name: Run SpotBugs, PMD, and checkstyle
+        run: mvn verify spotbugs:spotbugs pmd:pmd
+      - uses: jwgmeligmeyling/spotbugs-github-action@master
+        with:
+          path: "**/spotbugsXml.xml"
+      - uses: jwgmeligmeyling/pmd-github-action@master
+        with:
+          path: "**/pmd.xml"
+      - name: Generate code coverage
+        run: mvn jacoco:report
+      - name: Generate JaCoCo Badge
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          jacoco-csv-file: target/site/jacoco/jacoco.csv
+          generate-coverage-badge: true
+          coverage-badge-filename: jacoco.svg
+          generate-summary: false
+          summary-filename: coverage-summary.json
+          workflow-summary-heading: JaCoCo Test Coverage Summary
