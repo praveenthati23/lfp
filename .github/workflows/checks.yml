@@ -4,34 +4,30 @@ on:
   pull_request:
     branches:
       - playlist_reorder
-#on:
-#  workflow_dispatch:
-#    # Inputs the workflow accepts.
-#    inputs:
-#      name:
-#        # Friendly description to be shown in the UI instead of 'name'
-#        description: 'test run for code analysis'
-#        # Default value if no value is explicitly provided
-#        default: 'test'
+
 permissions:
-  id-token: write # This is required for requesting the JWT
+  id-token: write
   security-events: write
   contents: read
-  actions: read # This is required for actions/checkout
+  actions: read
   issues: write
   pull-requests: write
-  checks: write # needed for spotbugs
+  checks: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: "21"
           distribution: "temurin"
+
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -39,18 +35,32 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
       - name: Run tests
-        run: mvn $MVN_OPS test
-      - name: Run SpotBugs, PMD and checkstyle
-        run: mvn $MVN_OPS -B verify spotbugs:spotbugs pmd:pmd
-      - uses: jwgmeligmeyling/spotbugs-github-action@master
+        run: mvn -X test
+        env:
+          MAVEN_OPTS: "-XX:+ShowCodeDetailsInExceptionMessages"
+
+      - name: Run SpotBugs, PMD, and Checkstyle
+        run: mvn -X verify spotbugs:spotbugs pmd:pmd
+        env:
+          MAVEN_OPTS: "-XX:+ShowCodeDetailsInExceptionMessages"
+
+      - name: Analyze SpotBugs results
+        uses: jwgmeligmeyling/spotbugs-github-action@master
         with:
           path: "**/spotbugsXml.xml"
-      - uses: jwgmeligmeyling/pmd-github-action@master
+
+      - name: Analyze PMD results
+        uses: jwgmeligmeyling/pmd-github-action@master
         with:
           path: "**/pmd.xml"
+
       - name: Generate code coverage
-        run: mvn jacoco:report
+        run: mvn -X jacoco:report
+        env:
+          MAVEN_OPTS: "-XX:+ShowCodeDetailsInExceptionMessages"
+
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
         with:
