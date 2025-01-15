@@ -5,8 +5,6 @@ on:
     branches:
       - playlist_recorder
 
-env:
-  MVN_OPS: -DGIT_USER_NAME=${{ secrets.GIT_USER_NAME }} -DGIT_TOKEN=${{ secrets.GIT_TOKEN }} -s settings.xml
 #on:
 #  workflow_dispatch:
 #    # Inputs the workflow accepts.
@@ -30,10 +28,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
       - name: Cache local Maven repository
         uses: actions/cache@v2
