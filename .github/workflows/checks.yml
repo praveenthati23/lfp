@@ -5,8 +5,6 @@ on:
     branches:
       - playlist_reorder
 
-env:
-  MVN_OPS: -DGIT_USER_NAME=${{ secrets.GIT_USER_NAME }} -DGIT_TOKEN=${{ secrets.GIT_TOKEN }}
 
 permissions:
   id-token: write
@@ -25,11 +23,11 @@ jobs:
       # Checkout the repository code
       - uses: actions/checkout@v3
 
-      # Set up JDK 17
-      - name: Set up JDK 17
+      # Set up JDK 21
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       # Cache Maven dependencies to speed up builds
