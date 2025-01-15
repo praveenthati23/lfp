@@ -5,6 +5,7 @@ on:
     branches:
       - playlist_recorder  # Trigger on every commit to the playlist_recorder branch
 
+
 permissions:
   id-token: write  # This is required for requesting the JWT
   security-events: write
