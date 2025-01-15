@@ -1,7 +1,7 @@
-name: Push Request Checks
+name: Pull Request Checks
 
 on:
-  push:
+  pull_request:
     branches:
       - playlist_recorder  # Trigger on every commit to the playlist_recorder branch
 
