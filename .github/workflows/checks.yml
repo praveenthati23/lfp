@@ -5,8 +5,6 @@ on:
     branches:
       - playlist_reorder
 
-
-
 permissions:
   id-token: write
   security-events: write
