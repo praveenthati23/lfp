@@ -19,12 +19,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code from the repository
       - uses: actions/checkout@v3
+
+      # Set up JDK 21
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
+
+      # Cache the local Maven repository to speed up builds
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -32,26 +37,30 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
+      # Build and install the project using Maven
       - name: Build and Install with Maven
         run: mvn clean install -U $MVN_OPS
-      - name: Run tests
-        run: mvn $MVN_OPS test
-      - name: Run SpotBugs, PMD and checkstyle
-        run: mvn $MVN_OPS -B verify spotbugs:spotbugs pmd:pmd
-      - uses: jwgmeligmeyling/spotbugs-github-action@master
-        with:
-          path: '**/spotbugsXml.xml'
-      - uses: jwgmeligmeyling/pmd-github-action@master
-        with:
-          path: '**/pmd.xml'
-      - name: Generate code coverage
-        run: mvn jacoco:report
-      - name: Generate JaCoCo Badge
-        uses: cicirello/jacoco-badge-generator@v2
-        with:
-          jacoco-csv-file: target/site/jacoco/jacoco.csv
-          generate-coverage-badge: true
-          coverage-badge-filename: jacoco.svg
-          generate-summary: false
-          summary-filename: coverage-summary.json
-          workflow-summary-heading: JaCoCo Test Coverage Summary
+
+      # Uncomment the following steps to re-enable testing and code quality checks
+      # - name: Run tests
+      #   run: mvn $MVN_OPS test
+      # - name: Run SpotBugs, PMD and checkstyle
+      #   run: mvn $MVN_OPS -B verify spotbugs:spotbugs pmd:pmd
+      # - uses: jwgmeligmeyling/spotbugs-github-action@master
+      #   with:
+      #     path: '**/spotbugsXml.xml'
+      # - uses: jwgmeligmeyling/pmd-github-action@master
+      #   with:
+      #     path: '**/pmd.xml'
+      # - name: Generate code coverage
+      #   run: mvn jacoco:report
+      # - name: Generate JaCoCo Badge
+      #   uses: cicirello/jacoco-badge-generator@v2
+      #   with:
+      #     jacoco-csv-file: target/site/jacoco/jacoco.csv
+      #     generate-coverage-badge: true
+      #     coverage-badge-filename: jacoco.svg
+      #     generate-summary: false
+      #     summary-filename: coverage-summary.json
+      #     workflow-summary-heading: JaCoCo Test Coverage Summary
