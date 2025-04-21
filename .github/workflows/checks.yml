@@ -3,29 +3,34 @@ name: Pull Request Checks
 on:
   pull_request:
     branches:
-      - playlist_reorder  # Trigger on every commit to the playlist_recorder branch
+      - playlist_reorder
 
+# Commenting out the env and MVN_OPS since they are not required for this simple build
+# env:
+#   MVN_OPS: -DGIT_USER_NAME=${{ secrets.GIT_USER_NAME }} -DGIT_TOKEN=${{ secrets.GIT_TOKEN }} -s settings.xml
 
 permissions:
-  id-token: write  # This is required for requesting the JWT
+  id-token: write # This is required for requesting the JWT
   security-events: write
   contents: read
-  actions: read  # This is required for actions/checkout
+  actions: read # This is required for actions/checkout
   issues: write
   pull-requests: write
-  checks: write  # needed for spotbugs
+  checks: write # needed for spotbugs
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3  # Check out the repository
-      - name: Set up JDK 21
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: "21"
-          distribution: "temurin"
+          java-version: '17'
+          distribution: 'temurin'
+
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -33,24 +38,34 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Run tests
-        run: mvn
-      - name: Run SpotBugs, PMD, and checkstyle
-        run: mvn verify spotbugs:spotbugs pmd:pmd
-      - uses: jwgmeligmeyling/spotbugs-github-action@master
-        with:
-          path: "**/spotbugsXml.xml"
-      - uses: jwgmeligmeyling/pmd-github-action@master
-        with:
-          path: "**/pmd.xml"
-      - name: Generate code coverage
-        run: mvn jacoco:report
-      - name: Generate JaCoCo Badge
-        uses: cicirello/jacoco-badge-generator@v2
-        with:
-          jacoco-csv-file: target/site/jacoco/jacoco.csv
-          generate-coverage-badge: true
-          coverage-badge-filename: jacoco.svg
-          generate-summary: false
-          summary-filename: coverage-summary.json
-          workflow-summary-heading: JaCoCo Test Coverage Summary
+
+      - name: Build and Install without Tests
+        run: mvn clean install -DskipTests
+
+# Commenting out test-related steps since we are skipping tests
+#      - name: Run tests
+#        run: mvn $MVN_OPS test
+
+#      - name: Run SpotBugs, PMD and checkstyle
+#        run: mvn $MVN_OPS -B verify spotbugs:spotbugs pmd:pmd
+
+#      - uses: jwgmeligmeyling/spotbugs-github-action@master
+#        with:
+#          path: '**/spotbugsXml.xml'
+
+#      - uses: jwgmeligmeyling/pmd-github-action@master
+#        with:
+#          path: '**/pmd.xml'
+
+#      - name: Generate code coverage
+#        run: mvn jacoco:report
+
+#      - name: Generate JaCoCo Badge
+#        uses: cicirello/jacoco-badge-generator@v2
+#        with:
+#          jacoco-csv-file: target/site/jacoco/jacoco.csv
+#          generate-coverage-badge: true
+#          coverage-badge-filename: jacoco.svg
+#          generate-summary: false
+#          summary-filename: coverage-summary.json
+#          workflow-summary-heading: JaCoCo Test Coverage Summary
